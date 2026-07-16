@@ -1,0 +1,196 @@
+---
+// src/pages/index.astro
+import Layout from '../layouts/Layout.astro';
+import Ticker from '../components/Ticker.astro';
+import PizzaCard from '../components/PizzaCard.astro';
+
+// Array de Pizzas extraído directamente de tu diseño de Figma
+const PIZZAS = [
+  { num: '01', name: 'Margarita', desc: 'Tomate, mozzarella, orégano', tag: 'Clásica' },
+  { num: '04', name: '4 Quesos', desc: 'Tomate, mozzarella, cuatro tipos de queso', tag: 'Favorita' },
+  { num: '05', name: 'Barbacoa', desc: 'Tomate, mozzarella, ternera, cebolla, bacon, salsa barbacoa', tag: '' },
+  { num: '06', name: 'Americana', desc: 'Tomate, mozzarella, ternera, cebolla, jalapeños', tag: 'Picante' },
+  { num: '07', name: 'Campera', desc: 'Tomate, mozzarella, jamón, huevo, patatas', tag: '' },
+  { num: '27', name: 'Al Andalus', desc: 'Jamón, queso, maíz, pimiento, cebolla, tomate', tag: 'Especial' },
+  { num: '09', name: 'Vegetariana', desc: 'Tomate, mozzarella, champiñones, pimiento, cebolla, maíz', tag: 'Veggie' },
+  { num: '10', name: 'Pizza Blanca', desc: 'Nata, mozzarella, bacon, cebolla, ajo', tag: '' },
+  { num: '12', name: '4 Estaciones', desc: 'Tomate, mozzarella, jamón, champiñones, alcachofas, aceitunas', tag: '' },
+  { num: '13', name: 'Portuguesa', desc: 'Tomate, mozzarella, jamón, huevo, cebolla', tag: '' },
+  { num: 'F1', name: 'Fórmula 1', desc: 'La pizza estrella de la casa. Receta secreta del equipo', tag: 'La Nuestra' },
+  { num: '★', name: 'Pizza Bonus', desc: 'Consulta con nuestro equipo las pizzas del día', tag: 'Del día' },
+];
+
+// URLs temporales de fotos de Unsplash (luego las cambias por las reales del local en /public/images/)
+const PIZZA_IMGS = [
+  'https://images.unsplash.com/photo-1579751626657-72bc17010498?w=500&h=350&fit=crop&auto=format',
+  'https://images.unsplash.com/photo-1571997478779-2adcbbe9ab2f?w=500&h=350&fit=crop&auto=format',
+  'https://images.unsplash.com/photo-1598023696416-0193a0bcd302?w=500&h=350&fit=crop&auto=format',
+  'https://images.unsplash.com/photo-1622880833523-7cf1c0bd4296?w=500&h=350&fit=crop&auto=format',
+];
+---
+
+<Layout title="Pizzería Fórmula 1 | Tocina, Sevilla">
+  
+  {/* ── NAV ── */}
+  <nav class="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-12 h-16 bg-brand-black/97 border-b-2 border-brand-red">
+    <a href="#inicio" class="flex items-center gap-3">
+      <div class="checkered w-6 h-6 rounded-sm"></div>
+      <span class="text-white leading-none font-display text-xl tracking-wider">
+        PIZZERÍA <span class="text-brand-red">FÓRMULA 1</span>
+      </span>
+    </a>
+
+    <div class="hidden md:flex items-center gap-8">
+      <a href="#inicio" class="text-sm font-semibold tracking-widest text-brand-red font-condensed">INICIO</a>
+      <a href="#menu" class="text-sm font-semibold tracking-widest text-white/65 hover:text-brand-red font-condensed transition-colors">MENÚ</a>
+      <a href="#nosotros" class="text-sm font-semibold tracking-widest text-white/65 hover:text-brand-red font-condensed transition-colors">NOSOTROS</a>
+      <a href="#contacto" class="text-sm font-semibold tracking-widest text-white/65 hover:text-brand-red font-condensed transition-colors">CONTACTO</a>
+      <a href="tel:954740396" class="px-4 py-2 text-sm font-bold text-white bg-brand-red font-condensed tracking-wider">
+        📞 954 740 396
+      </a>
+    </div>
+  </nav>
+
+  {/* ── HERO Seccion ── */}
+  <section id="inicio" class="relative flex flex-col items-center justify-center text-center overflow-hidden min-h-screen pt-16 bg-[#0D0D0D]">
+    <div class="absolute inset-0 checkered-white opacity-20"></div>
+    <div class="absolute w-[600px] h-[600px] rounded-full bg-radial from-brand-red/25 to-transparent top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"></div>
+
+    <div class="relative z-10 px-6 max-w-4xl mx-auto">
+      <div class="flex items-center justify-center gap-3 mb-6">
+        <div class="checkered w-6 h-6"></div>
+        <span class="text-xs tracking-[0.28em] font-bold text-brand-red font-condensed">TOCINA · SEVILLA</span>
+        <div class="checkered w-6 h-6"></div>
+      </div>
+
+      <h1 class="leading-none mb-6 text-white font-display text-[clamp(48px,12vw,110px)] tracking-wider">
+        PIZZERÍA<br />
+        <span class="text-brand-red">FÓRMULA 1</span>
+      </h1>
+
+      <p class="text-lg md:text-xl font-medium mb-10 max-w-lg mx-auto text-white/60 font-body">
+        Pizzas artesanales con sabor de campeón. Recogida y reparto a domicilio en Tocina.
+      </p>
+
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+        <a href="#menu" class="px-8 py-4 font-bold text-lg text-white tracking-wider bg-brand-red font-condensed transition-all hover:brightness-110">
+          VER MENÚ
+        </a>
+        <a href="tel:954740396" class="px-8 py-4 font-bold text-lg tracking-wider border border-white/25 text-brand-white font-condensed transition-all hover:bg-white/5">
+          📞 PEDIR A DOMICILIO
+        </a>
+      </div>
+    </div>
+  </section>
+
+  {/* ── TICKER MARQUEE ── */}
+  <Ticker />
+
+  {/* ── SECCIÓN MENÚ ── */}
+  <section id="menu" class="py-20 md:py-28 px-6 md:px-12 max-w-7xl mx-auto">
+    <div class="flex items-end gap-5 mb-12">
+      <div>
+        <span class="text-xs tracking-[0.25em] font-bold block mb-2 text-brand-red font-condensed">NUESTRAS PIZZAS</span>
+        <h2 class="text-white leading-none font-display text-[clamp(40px,7vw,72px)] tracking-wide">EL MENÚ</h2>
+      </div>
+      <div class="checkered h-14 w-14 mb-1 hidden md:block"></div>
+    </div>
+
+    {/* Rejilla de Pizzas renderizadas dinámicamente */}
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+      {PIZZAS.map((pizza, index) => (
+        <PizzaCard pizza={pizza} imgUrl={PIZZA_IMGS[index % PIZZA_IMGS.length]} />
+      ))}
+    </div>
+
+    {/* Promo x10 Pizzas */}
+    <div class="mt-10 p-6 md:p-8 flex flex-col md:flex-row items-center gap-6 justify-between relative overflow-hidden bg-brand-red">
+      <div class="checkered-white absolute inset-0 opacity-20"></div>
+      <div class="relative z-10">
+        <p class="text-white text-2xl md:text-3xl font-bold font-display tracking-wide">
+          x10 PIZZAS FAMILIARES — TE REGALAMOS EL DOBLE
+        </p>
+        <p class="text-white/75 mt-1 font-medium font-body">Llama y consulta condiciones.</p>
+      </div>
+      <a href="tel:954740396" class="relative z-10 px-7 py-3 font-bold text-base text-white whitespace-nowrap bg-brand-black font-condensed tracking-wider hover:brightness-90 transition-all">
+        LLAMAR AHORA
+      </a>
+    </div>
+  </section>
+
+  {/* ── SECCIÓN NOSOTROS ── */}
+  <section id="nosotros" class="bg-[#111] border-t border-white/5 py-20 md:py-28 px-6 md:px-12">
+    <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-16 items-center">
+      {/* Gráfico Bandera Izquierda */}
+      <div class="relative flex items-center justify-center min-h-[320px]">
+        <div class="absolute checkered opacity-30 w-[200px] h-[200px] top-0 left-0"></div>
+        <div class="relative z-10 text-center px-8 py-10 border-2 border-brand-red bg-brand-black">
+          <p class="text-white font-display text-7xl text-brand-red leading-none">🍕</p>
+          <p class="mt-4 text-white font-display text-2xl tracking-wide leading-tight">
+            DESDE TOCINA<br /><span class="text-brand-red">CON SABOR</span>
+          </p>
+        </div>
+        <div class="absolute checkered opacity-30 w-[200px] h-[200px] bottom-0 right-0"></div>
+      </div>
+
+      {/* Texto Historia */}
+      <div>
+        <span class="text-xs tracking-[0.25em] font-bold block mb-4 text-brand-red font-condensed">NUESTRA HISTORIA</span>
+        <h2 class="text-white leading-none mb-6 font-display text-[clamp(36px,5vw,56px)] tracking-wide">PASIÓN POR<br />LA PIZZA</h2>
+        <p class="text-white/60 text-lg leading-relaxed mb-5 font-body">
+          En Pizzería Fórmula 1 hacemos pizzas artesanales con los mejores ingredientes, para los vecinos de Tocina y alrededores.
+        </p>
+        <p class="text-white/60 text-lg leading-relaxed mb-8 font-body">
+          Como en la Fórmula 1, cada detalle importa: masa fresca, tomate natural, mozzarella de calidad y un horno que nunca para. Rápidos, precisos y con sabor de campeón.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  {/* ── SECCIÓN CONTACTO ── */}
+  <section id="contacto" class="py-20 md:py-28 px-6 md:px-12 max-w-7xl mx-auto">
+    <span class="text-xs tracking-[0.25em] font-bold block mb-2 text-brand-red font-condensed">ENCUÉNTRANOS</span>
+    <h2 class="text-white leading-none mb-12 font-display text-[clamp(40px,7vw,72px)] tracking-wide">CONTACTO</h2>
+
+    <div class="grid md:grid-cols-3 gap-5">
+      <div class="p-8 bg-[#111] border border-white/5">
+        <div class="text-3xl mb-4">📍</div>
+        <h3 class="text-white text-xl mb-2 font-display tracking-wide">UBICACIÓN</h3>
+        <p class="text-white/55 leading-relaxed font-body">Tocina, Sevilla<br />Andalucía, España</p>
+      </div>
+
+      <div class="p-8 relative overflow-hidden bg-brand-red">
+        <div class="checkered-white absolute inset-0 opacity-20"></div>
+        <div class="relative z-10">
+          <div class="text-3xl mb-4">📞</div>
+          <h3 class="text-white text-xl mb-3 font-display tracking-wide">LLÁMANOS</h3>
+          <a href="tel:954740396" class="block text-white text-2xl font-bold font-condensed hover:underline">954 740 396</a>
+          <a href="tel:6954740396" class="block text-white/80 text-lg font-semibold font-condensed hover:underline mt-1">695 474 03 96</a>
+        </div>
+      </div>
+
+      <div class="p-8 bg-[#111] border border-white/5">
+        <div class="text-3xl mb-4">🕐</div>
+        <h3 class="text-white text-xl mb-3 font-display tracking-wide">HORARIO</h3>
+        <div class="space-y-1 text-white/55 font-body">
+          <p>Lun – Vie: 13:00 – 16:00</p>
+          <p>Lun – Vie: 20:00 – 24:00</p>
+          <p class="mt-2 text-brand-red font-semibold">Sáb – Dom: Horario ampliado</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {/* ── FOOTER ── */}
+  <footer class="bg-[#080808] border-t-2 border-brand-red py-10 px-6 md:px-12">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+      <div class="flex items-center gap-3">
+        <div class="checkered w-5 h-5"></div>
+        <span class="text-white font-display text-base tracking-wider">PIZZERÍA <span class="text-brand-red">FÓRMULA 1</span></span>
+      </div>
+      <p class="text-white/30 text-sm text-center font-body">Tocina, Sevilla · 954 740 396 · 695 474 03 96</p>
+      <p class="text-white/20 text-xs font-body">© {new Date().getFullYear()} Pizzería Fórmula 1</p>
+    </div>
+  </footer>
+
+</Layout>

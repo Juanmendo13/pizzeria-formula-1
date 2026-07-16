@@ -1,0 +1,21 @@
+---
+const TICKER_ITEMS = [
+  '🏎️ PIZZAS A DOMICILIO',
+  '📞 954 740 396',
+  '🏁 PIZZERÍA FÓRMULA 1',
+  '📍 TOCINA, SEVILLA',
+  '🍕 RECETA ARTESANAL',
+  '📞 695 474 03 96',
+  '🏁 ABIERTO TODOS LOS DÍAS',
+];
+---
+<div class="overflow-hidden border-y bg-brand-red border-[#990000] h-10">
+  <div class="flex whitespace-nowrap animate-marquee w-max">
+    {/* Duplicamos la lista para asegurar el efecto de bucle infinito */}
+    {[...TICKER_ITEMS, ...TICKER_ITEMS].map((item) => (
+      <span class="inline-block px-8 text-sm font-bold text-white font-condensed tracking-widest leading-[40px]">
+        {item}
+      </span>
+    ))}
+  </div>
+</div>

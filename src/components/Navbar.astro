@@ -1,0 +1,22 @@
+---
+// src/components/Navbar.astro
+---
+
+<nav class="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-12 h-16 bg-brand-black/97 border-b-2 border-brand-red">
+  <a href="#inicio" class="flex items-center gap-3">
+    <div class="checkered w-6 h-6 rounded-sm"></div>
+    <span class="text-white leading-none font-display text-xl tracking-wider">
+      PIZZERÍA <span class="text-brand-red">FÓRMULA 1</span>
+    </span>
+  </a>
+
+  <div class="hidden md:flex items-center gap-8">
+    <a href="#inicio" class="text-sm font-semibold tracking-widest text-brand-red font-condensed">INICIO</a>
+    <a href="#menu" class="text-sm font-semibold tracking-widest text-white/65 hover:text-brand-red font-condensed transition-colors">MENÚ</a>
+    <a href="#nosotros" class="text-sm font-semibold tracking-widest text-white/65 hover:text-brand-red font-condensed transition-colors">NOSOTROS</a>
+    <a href="#contacto" class="text-sm font-semibold tracking-widest text-white/65 hover:text-brand-red font-condensed transition-colors">CONTACTO</a>
+    <a href="tel:954740396" class="px-4 py-2 text-sm font-bold text-white bg-brand-red font-condensed tracking-wider hover:bg-brand-red-dark transition-colors">
+      📞 954 740 396
+    </a>
+  </div>
+</nav>
