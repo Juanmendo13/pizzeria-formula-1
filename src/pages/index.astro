@@ -1,38 +1,49 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import Navbar from '../components/Navbar.astro';
-import Ticker from '../components/Ticker.astro';
-import PizzaCard from '../components/PizzaCard.astro';
-import menu from '../data/menu.json';
+// src/pages/index.astro
+import Layout from "../layouts/Layout.astro";
+import Navbar from "../components/Navbar.astro";
+import Ticker from "../components/Ticker.astro";
+import PizzaCard from "../components/PizzaCard.astro";
+import MenuSection from "../components/MenuSection.astro";
+import menu from "../data/menu.json";
 ---
 
 <Layout title="Pizzería Fórmula 1 | Carta">
-  {/* 1. Recuperamos tu Navbar */}
   <Navbar />
 
   <main class="bg-black min-h-screen text-white">
-    {/* 2. Sección Principal (Hero) con la estética F1 que tenías antes */}
-    <section class="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8 text-center max-w-7xl mx-auto">
-      <span class="text-red-500 font-mono tracking-widest uppercase text-sm font-bold animate-pulse">
+    {/* Sección Principal (Hero) */}
+    <section
+      class="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8 text-center max-w-7xl mx-auto"
+    >
+      <span
+        class="text-red-500 font-mono tracking-widest uppercase text-sm font-bold animate-pulse"
+      >
         🏁 Semáforo en Verde 🏁
       </span>
-      <h1 class="text-5xl md:text-8xl font-black mt-4 mb-6 font-mono italic tracking-tight uppercase leading-none">
+      <h1
+        class="text-5xl md:text-8xl font-black mt-4 mb-6 font-mono italic tracking-tight uppercase leading-none"
+      >
         Pizzería <span class="text-red-600 block sm:inline">Fórmula 1</span>
       </h1>
-      <p class="text-zinc-400 max-w-2xl mx-auto text-base md:text-xl leading-relaxed">
-        Las pizzas más rápidas y sabrosas de la ciudad. Masa artesanal estirada a mano, ingredientes de primera calidad y un sabor que te llevará directo al podio.
+      <p
+        class="text-zinc-400 max-w-2xl mx-auto text-base md:text-xl leading-relaxed"
+      >
+        Las pizzas más rápidas y sabrosas de la ciudad. Masa artesanal estirada
+        a mano, ingredientes de primera calidad y un sabor que te llevará
+        directo al podio.
       </p>
 
       {/* Botones de acción rápida con estilo racing */}
       <div class="mt-10 flex flex-wrap justify-center gap-4">
-        <a 
-          href="#carta" 
+        <a
+          href="#carta"
           class="px-8 py-4 bg-red-600 hover:bg-red-700 text-white font-mono font-bold uppercase rounded-lg transform hover:-translate-y-1 transition duration-300 shadow-lg shadow-red-900/30"
         >
           Ver la Carta 🏎️
         </a>
-        <a 
-          href="tel:955XXXXXX" 
+        <a
+          href="tel:955XXXXXX"
           class="px-8 py-4 bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-white font-mono font-bold uppercase rounded-lg transform hover:-translate-y-1 transition duration-300"
         >
           Llamar Pedido 📞
@@ -40,16 +51,20 @@ import menu from '../data/menu.json';
       </div>
     </section>
 
-    {/* 3. Tu Ticker Animado (Patrocinadores / Avisos) */}
+    {/* Ticker Animado */}
     <div class="border-y border-zinc-800 bg-zinc-950 py-4">
       <Ticker />
     </div>
 
-    {/* 4. La Nueva Grid de Pizzas Integrada en el Diseño General */}
-    <section id="carta" class="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto scroll-mt-20">
-      {/* Cabecera de la sección de la carta */}
+    {/* La Grid de Pizzas */}
+    <section
+      id="carta"
+      class="pt-24 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto scroll-mt-20"
+    >
       <div class="text-center mb-16">
-        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-red-500/30 bg-red-500/10 text-red-500 font-mono text-xs uppercase tracking-wider mb-4">
+        <div
+          class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-red-500/30 bg-red-500/10 text-red-500 font-mono text-xs uppercase tracking-wider mb-4"
+        >
           <span class="w-2 h-2 rounded-full bg-red-500 animate-ping"></span>
           Box Stop: Elige tu Escudería
         </div>
@@ -61,16 +76,71 @@ import menu from '../data/menu.json';
         </p>
       </div>
 
-      {/* Grid de las pizzas reales */}
-      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {menu.map((pizza) => (
-          <PizzaCard 
-            id={pizza.id}
-            nombre={pizza.nombre}
-            ingredientes={pizza.ingredientes}
-            imagen={pizza.imagen}
-          />
-        ))}
+      <div
+        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
+      >
+        {
+          menu.pizzas.map((pizza) => (
+            <PizzaCard
+              id={pizza.id}
+              nombre={pizza.nombre}
+              ingredientes={pizza.ingredientes}
+              imagen={pizza.imagen}
+            />
+          ))
+        }
+      </div>
+    </section>
+
+    {/* ZONA DE DESCARGA Y VISTA DE CARTA OPTIMIZADA */}
+    <div
+      class="flex flex-col sm:flex-row justify-center items-center gap-4 pb-16 px-4"
+    >
+      {
+        /* Botón 1: Descarga del archivo físico real que tienes en tu carpeta /public */
+      }
+      <!-- Busca este botón en tu index.astro y déjalo así: -->
+      <a
+        href="/categorias/carta-formula1.pdf"
+        download
+        class="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-6 py-3 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 hover:border-red-600 text-zinc-300 hover:text-white font-mono text-sm font-bold uppercase rounded-lg transition duration-300 shadow-md group"
+      >
+        <span class="transform group-hover:scale-110 transition">📥</span> Descargar
+        Menú PDF
+      </a>
+      {
+        /* Botón 2: Enlace a la vista interactiva/imprimible que maquetamos antes */
+      }
+      <a
+        href="/imprimir-carta"
+        target="_blank"
+        class="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-6 py-3 bg-red-600/10 hover:bg-red-600/20 border border-red-500/30 hover:border-red-500 text-red-400 hover:text-red-300 font-mono text-sm font-bold uppercase rounded-lg transition duration-300 shadow-md"
+      >
+        <span>👀</span> Ver Carta en Pantalla Completa
+      </a>
+    </div>
+
+    {/* Nueva Sección de Desplegables (Otras Categorías) */}
+    <section class="pb-24 px-4 sm:px-6 lg:px-8 max-w-3xl mx-auto">
+      <div class="text-center mb-10">
+        <h3
+          class="text-xl md:text-2xl font-black font-mono italic uppercase text-zinc-400"
+        >
+          Otros Complementos de Boxes
+        </h3>
+      </div>
+
+      <div class="space-y-4">
+        {
+          menu.otrasCategorias.map((seccion) => (
+            <MenuSection
+              categoria={seccion.categoria}
+              imagen={seccion.imagen}
+              items={seccion.items}
+              nota={seccion.nota}
+            />
+          ))
+        }
       </div>
     </section>
   </main>

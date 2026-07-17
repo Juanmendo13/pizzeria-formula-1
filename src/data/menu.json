@@ -1,68 +1,163 @@
-[
-  {
-    "id": "00",
-    "nombre": "Margarita",
-    "ingredientes": "Tomate y queso",
-    "imagen": "00 margarita.webp"
-  },
-  {
-    "id": "01",
-    "nombre": "4 Quesos",
-    "ingredientes": "Mezcla de 4 exquisitos quesos",
-    "imagen": "01 4 quesos.webp"
-  },
-  {
-    "id": "02",
-    "nombre": "Barbacoa",
-    "ingredientes": "Salsa barbacoa, carne picada, bacon y cebolla",
-    "imagen": "02 bbq.webp"
-  },
-  {
-    "id": "03",
-    "nombre": "Carbonara",
-    "ingredientes": "Base de nata, bacon, champiñones y cebolla",
-    "imagen": "03 carbonara.webp"
-  },
-  {
-    "id": "04",
-    "nombre": "Americana",
-    "ingredientes": "Pollo, bacon, queso cheddar, pepperoni y tomate",
-    "imagen": "04 americana.webp"
-  },
-  {
-    "id": "05",
-    "nombre": "Campera",
-    "ingredientes": "Tomate, pimiento rojo y verde, maíz y pollo",
-    "imagen": "05 campera.webp"
-  },
-  {
-    "id": "06",
-    "nombre": "Suprema",
-    "ingredientes": "Salsa barbacoa, nata, bacon, carne picada, champiñones y cebolla",
-    "imagen": "06 suprema.webp"
-  },
-  {
-    "id": "07",
-    "nombre": "Al-Andalus",
-    "ingredientes": "Tomate, queso, maíz, cebolla y carne kebab",
-    "imagen": "07 Al andalus.webp"
-  },
-  {
-    "id": "08",
-    "nombre": "Caprichosa",
-    "ingredientes": "Jamón york, bacon, atún, tomate y queso",
-    "imagen": "08 caprichosa.webp"
-  },
-  {
-    "id": "09",
-    "nombre": "Vegetal",
-    "ingredientes": "Tomate, queso, maíz, espárragos, champiñones, alcachofas y aceitunas",
-    "imagen": "09 vegetal.webp"
-  },
-  {
-    "id": "10",
-    "nombre": "Texana",
-    "ingredientes": "Tomate, carne picada, bacon y queso cheddar",
-    "imagen": "10 texana.webp"
-  }
-]
+{
+  "pizzas": [
+    {
+      "id": "00",
+      "nombre": "Margarita",
+      "ingredientes": "Tomate y queso",
+      "imagen": "00 margarita.webp"
+    },
+    {
+      "id": "01",
+      "nombre": "4 Quesos",
+      "ingredientes": "Mezcla de 4 exquisitos quesos",
+      "imagen": "01 4 quesos.webp"
+    },
+    {
+      "id": "02",
+      "nombre": "Barbacoa",
+      "ingredientes": "Salsa barbacoa, carne picada, bacon y cebolla",
+      "imagen": "02 bbq.webp"
+    },
+    {
+      "id": "03",
+      "nombre": "Carbonara",
+      "ingredientes": "Base de nata, bacon, champiñones y cebolla",
+      "imagen": "03 carbonara.webp"
+    },
+    {
+      "id": "04",
+      "nombre": "Americana",
+      "ingredientes": "Pollo, bacon, queso cheddar, pepperoni y tomate",
+      "imagen": "04 americana.webp"
+    },
+    {
+      "id": "05",
+      "nombre": "Campera",
+      "ingredientes": "Tomate, pimiento rojo y verde, maíz y pollo",
+      "imagen": "05 campera.webp"
+    },
+    {
+      "id": "06",
+      "nombre": "Suprema",
+      "ingredientes": "Salsa barbacoa, nata, bacon, carne picada, champiñones y cebolla",
+      "imagen": "06 suprema.webp"
+    },
+    {
+      "id": "07",
+      "nombre": "Al-Andalus",
+      "ingredientes": "Tomate, queso, maíz, cebolla y carne kebab",
+      "imagen": "07 Al andalus.webp"
+    },
+    {
+      "id": "08",
+      "nombre": "Caprichosa",
+      "ingredientes": "Jamón york, bacon, atún, tomate y queso",
+      "imagen": "08 caprichosa.webp"
+    },
+    {
+      "id": "09",
+      "nombre": "Vegetal",
+      "ingredientes": "Tomate, queso, maíz, espárragos, champiñones, alcachofas y aceitunas",
+      "imagen": "09 vegetal.webp"
+    },
+    {
+      "id": "10",
+      "nombre": "Texana",
+      "ingredientes": "Tomate, carne picada, bacon y queso cheddar",
+      "imagen": "10 texana.webp"
+    }
+  ],
+  "otrasCategorias": [
+    {
+      "id": "para-picar",
+      "categoria": "Para Picar",
+      "imagen": "para-picar.webp",
+      "items": [
+        { "nombre": "Patatas fritas + salsa (2 personas)", "precio": "2,20€" },
+        { "nombre": "Patatas gajos + salsa (2 personas)", "precio": "3,00€" },
+        { "nombre": "Patatas bravas (2 personas)", "precio": "3,50€" },
+        { "nombre": "Patatas gratinadas frescas con bacon y queso", "precio": "4,95€" },
+        { "nombre": "Nuggets + salsa (8 unidades)", "precio": "3,60€" },
+        { "nombre": "Alitas de pollo frescas picantes (8 unidades)", "precio": "4,90€" },
+        { "nombre": "Snack Box (2 nuggets, 2 palitos, 2 aros, 2 bolitas)", "precio": "3,95€" },
+        { "nombre": "Palitos de mozzarella (8 unidades)", "precio": "3,75€" },
+        { "nombre": "Chicken bites (15 unidades)", "precio": "2,50€" },
+        { "nombre": "Nuevos aritos de cebolla (250 Gr.)", "precio": "2,70€" }
+      ]
+    },
+    {
+      "id": "ensaladas",
+      "categoria": "Ensaladas",
+      "imagen": "ensaladas.webp",
+      "items": [
+        { "nombre": "De la huerta", "descripcion": "Atún, lechuga, zanahoria, tomate, cebolla, maíz, espárragos y aceitunas", "precio": "4,75€" },
+        { "nombre": "De pollo crujiente", "descripcion": "Lechuga, tomate, cebolla, maíz, pollo crujiente y salsa César", "precio": "4,75€" },
+        { "nombre": "Griega", "descripcion": "Tomate, pepino, pimiento rojo, verde y amarillo, cebolla morada, aceitunas, queso feta y salsa vinagreta", "precio": "4,95€" }
+      ]
+    },
+    {
+      "id": "serranitos",
+      "categoria": "Serranitos",
+      "imagen": "serranitos.webp",
+      "items": [
+        { "nombre": "Pollo o Lomo", "descripcion": "Tomate, pimiento, jamón, patatas y salsa", "precio": "4,95€" }
+      ]
+    },
+    {
+      "id": "hamburguesas",
+      "categoria": "Hamburguesas",
+      "imagen": "hamburguesas.webp",
+      "nota": "Patatas y refresco por 2,10€+",
+      "items": [
+        { "nombre": "Simple", "descripcion": "Lechuga, tomate y queso", "precio": "3,50€" },
+        { "nombre": "Pollo", "descripcion": "Carne de pollo, lechuga, tomate, maíz, cebolla y salsa kebab", "precio": "4,00€" },
+        { "nombre": "Pollo crujiente", "descripcion": "Lechuga, cebolla, mahonesa y pollo crujiente", "precio": "3,75€" },
+        { "nombre": "Crispy chicken", "descripcion": "Lechuga, cebolla, salsa barbacoa y pollo crujiente", "precio": "4,00€" },
+        { "nombre": "Ternera", "descripcion": "Carne de ternera, lechuga, tomate, maíz, cebolla y salsa", "precio": "4,00€" },
+        { "nombre": "Vacuno", "descripcion": "Carne 100% de vacuno, bacon, queso, lechuga, tomate, cebolla y salsa barbacoa", "precio": "4,50€" },
+        { "nombre": "Fórmula 1", "descripcion": "Ternera y cerdo, queso, lechuga, cebolla caramelizada, pepinillo y salsa", "precio": "4,95€" },
+        { "nombre": "De Buey", "descripcion": "Lechuga, tomate, cebolla, queso y hamburguesa de buey 200 Gr.", "precio": "4,95€" }
+      ]
+    },
+    {
+      "id": "sandwiches",
+      "categoria": "Sandwiches",
+      "imagen": "sandwiches.webp",
+      "items": [
+        { "nombre": "Mixto", "descripcion": "Jamón york, queso, tomate, cebolla morada", "precio": "2,80€" },
+        { "nombre": "Pollo", "descripcion": "Lechuga y mahonesa", "precio": "3,50€" },
+        { "nombre": "Vegetal", "descripcion": "Lechuga, tomate, mahonesa, huevo duro y atún", "precio": "3,50€" }
+      ]
+    },
+    {
+      "id": "kebab",
+      "categoria": "Kebab",
+      "imagen": "kebab.webp",
+      "items": [
+        { "nombre": "Pollo", "descripcion": "Carne de pollo, tomate, lechuga, maíz, cebolla y salsa kebab", "precio": "4,00€" },
+        { "nombre": "Ternera", "descripcion": "Carne de ternera, lechuga, tomate, maíz, cebolla y salsa kebab", "precio": "4,00€" },
+        { "nombre": "Mixto", "descripcion": "Ternera y pollo, lechuga, tomate, maíz, cebolla y salsa kebab", "precio": "4,00€" }
+      ]
+    },
+    {
+      "id": "pastas",
+      "categoria": "Pastas",
+      "imagen": "pastas.webp",
+      "items": [
+        { "nombre": "Tallarines", "descripcion": "A la Carbonara o a los 4 quesos", "precio": "4,95€" },
+        { "nombre": "Espaguettis", "descripcion": "A la Boloñesa o al roquefort", "precio": "4,95€" },
+        { "nombre": "Lasaña", "descripcion": "De carne, atún o vegetal", "precio": "4,95€" },
+        { "nombre": "Canelones de carne", "precio": "4,95€" }
+      ]
+    },
+    {
+      "id": "postres",
+      "categoria": "Y de postre...",
+      "imagen": "postres.webp",
+      "items": [
+        { "nombre": "Tarta de queso casera con arándanos", "precio": "2,50€" },
+        { "nombre": "Tarta de tiramisú", "precio": "2,50€" }
+      ]
+    }
+  ]
+}
