@@ -1,0 +1,68 @@
+[
+  {
+    "id": "00",
+    "nombre": "Margarita",
+    "ingredientes": "Tomate y queso",
+    "imagen": "00 margarita.webp"
+  },
+  {
+    "id": "01",
+    "nombre": "4 Quesos",
+    "ingredientes": "Mezcla de 4 exquisitos quesos",
+    "imagen": "01 4 quesos.webp"
+  },
+  {
+    "id": "02",
+    "nombre": "Barbacoa",
+    "ingredientes": "Salsa barbacoa, carne picada, bacon y cebolla",
+    "imagen": "02 bbq.webp"
+  },
+  {
+    "id": "03",
+    "nombre": "Carbonara",
+    "ingredientes": "Base de nata, bacon, champiñones y cebolla",
+    "imagen": "03 carbonara.webp"
+  },
+  {
+    "id": "04",
+    "nombre": "Americana",
+    "ingredientes": "Pollo, bacon, queso cheddar, pepperoni y tomate",
+    "imagen": "04 americana.webp"
+  },
+  {
+    "id": "05",
+    "nombre": "Campera",
+    "ingredientes": "Tomate, pimiento rojo y verde, maíz y pollo",
+    "imagen": "05 campera.webp"
+  },
+  {
+    "id": "06",
+    "nombre": "Suprema",
+    "ingredientes": "Salsa barbacoa, nata, bacon, carne picada, champiñones y cebolla",
+    "imagen": "06 suprema.webp"
+  },
+  {
+    "id": "07",
+    "nombre": "Al-Andalus",
+    "ingredientes": "Tomate, queso, maíz, cebolla y carne kebab",
+    "imagen": "07 Al andalus.webp"
+  },
+  {
+    "id": "08",
+    "nombre": "Caprichosa",
+    "ingredientes": "Jamón york, bacon, atún, tomate y queso",
+    "imagen": "08 caprichosa.webp"
+  },
+  {
+    "id": "09",
+    "nombre": "Vegetal",
+    "ingredientes": "Tomate, queso, maíz, espárragos, champiñones, alcachofas y aceitunas",
+    "imagen": "09 vegetal.webp"
+  },
+  {
+    "id": "10",
+    "nombre": "Texana",
+    "ingredientes": "Tomate, carne picada, bacon y queso cheddar",
+    "imagen": "10 texana.webp"
+  }
+]

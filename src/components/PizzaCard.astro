@@ -1,63 +1,38 @@
 ---
-// src/components/PizzaCard.astro
-interface Props {
-  pizza: {
-    num: string;
-    name: string;
-    desc: string;
-    tag: string;
-  };
-  imgUrl: string;
-}
+// Importamos el componente de optimización de imágenes nativo de Astro
+import { Image } from 'astro:assets';
 
-const { pizza, imgUrl } = Astro.props;
+// Recibimos las propiedades de la pizza
+const { id, nombre, ingredientes, imagen } = Astro.props;
+
+// Importamos dinámicamente la imagen correspondiente de la carpeta assets
+const imagenes = import.meta.glob('/src/assets/pizzas/*.{jpeg,jpg,png,gif,webp}');
+const rutaImagen = `/src/assets/pizzas/${imagen}`;
+if (!imagenes[rutaImagen]) {
+  throw new Error(`La imagen "${rutaImagen}" no existe en src/assets/pizzas/`);
+}
 ---
 
-<div
-  class="group relative overflow-hidden cursor-default transition-all duration-300 bg-[#111] border border-white/10 hover:bg-[#1a0000] hover:border-brand-red"
->
-  <div class="relative h-40 overflow-hidden">
-    <img
-      src={imgUrl}
-      alt={pizza.name}
-      class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.06]"
+<div class="bg-zinc-900 border border-zinc-800 rounded-xl overflow-hidden hover:border-red-500 transition duration-300 flex flex-col h-full shadow-lg">
+  {/* Contenedor de la Imagen */}
+  <div class="relative aspect-square overflow-hidden bg-black flex items-center justify-center p-4">
+    <span class="absolute top-3 left-3 bg-red-600 text-white font-mono text-sm font-bold px-2 py-1 rounded-md z-10">
+      {id}
+    </span>
+    <Image 
+      src={imagenes[rutaImagen]()} 
+      alt={`Pizza ${nombre}`} 
+      class="object-cover w-full h-full rounded-full transform hover:scale-105 transition duration-500"
     />
-    {/* Overlay degradado */}
-    <div class="absolute inset-0 bg-gradient-to-t from-[#111] via-transparent to-transparent"></div>
-    
-    {/* Bandera F1 y Número */}
-    <div class="absolute top-0 left-0 flex">
-      <div class="checkered-sm w-4 h-7" />
-      <span
-        class="px-2 py-0.5 text-xs font-bold text-white bg-brand-red font-condensed tracking-widest"
-      >
-        #{pizza.num}
-      </span>
-    </div>
-
-    {/* Etiqueta especial (Tag) */}
-    {pizza.tag && (
-      <span
-        class="absolute top-2 right-2 px-2 py-0.5 text-xs font-bold text-black bg-[#F5F5F5] font-condensed"
-      >
-        {pizza.tag.toUpperCase()}
-      </span>
-    )}
   </div>
 
-  <div class="p-4">
-    <h3
-      class="text-lg text-white mb-1 leading-tight font-display tracking-wider"
-    >
-      {pizza.name.toUpperCase()}
+  {/* Contenido de la Tarjeta */}
+  <div class="p-5 flex flex-col flex-grow text-left">
+    <h3 class="text-xl font-bold text-white uppercase font-mono tracking-wide mb-2">
+      {nombre}
     </h3>
-    <p class="text-xs text-white/50 font-body">
-      {pizza.desc}
+    <p class="text-zinc-400 text-sm flex-grow leading-relaxed">
+      {ingredientes}
     </p>
   </div>
-
-  {/* Línea roja animada al hacer hover abajo */}
-  <div
-    class="absolute bottom-0 left-0 h-0.5 w-0 bg-brand-red transition-all duration-300 group-hover:w-full"
-  />
 </div>
