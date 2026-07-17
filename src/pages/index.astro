@@ -5,7 +5,7 @@ import Navbar from '../components/Navbar.astro';
 import Ticker from '../components/Ticker.astro';
 import PizzaCard from '../components/PizzaCard.astro';
 import MenuSection from '../components/MenuSection.astro';
-import Footer from '../components/Footer.astro'; // Importamos el nuevo Footer
+import Footer from '../components/Footer.astro';
 import menu from '../data/menu.json';
 ---
 
@@ -25,7 +25,7 @@ import menu from '../data/menu.json';
         Las pizzas más rápidas y sabrosas de la ciudad. Masa artesanal estirada a mano, ingredientes de primera calidad y un sabor que te llevará directo al podio.
       </p>
 
-      {/* Botones de acción rápida con estilo racing */}
+      {/* Botones de acción rápida */}
       <div class="mt-10 flex flex-wrap justify-center gap-4">
         <a 
           href="#carta" 
@@ -93,8 +93,8 @@ import menu from '../data/menu.json';
       </a>
     </div>
 
-    {/* 5. Nueva Sección de Complementos Rediseñada */}
-    <section class="pb-32 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
+    {/* 5. Sección de Complementos Rediseñada */}
+    <section id="complementos" class="pb-32 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto scroll-mt-24">
       <div class="text-center mb-12">
         <h3 class="text-2xl md:text-3xl font-black font-mono italic uppercase tracking-tight">
           🏁 Otros Complementos de Boxes
@@ -102,7 +102,7 @@ import menu from '../data/menu.json';
         <p class="text-zinc-500 text-xs font-mono mt-2">Acompaña tu menú principal antes de ver la bandera a cuadros</p>
       </div>
 
-      {/* Cambiamos a un grid de 2 columnas en pantallas medianas/grandes */}
+      {/* Grid responsivo de 2 columnas para equilibrar la vista */}
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
         {menu.otrasCategorias.map((seccion) => (
           <MenuSection 
@@ -116,6 +116,8 @@ import menu from '../data/menu.json';
     </section>
   </main>
 
-  {/* 6. Footer de la Página */}
-  <Footer />
+  {/* 6. Footer de la Página (Con contenedor de anclaje para el menú) */}
+  <div id="contacto" class="scroll-mt-24">
+    <Footer />
+  </div>
 </Layout>

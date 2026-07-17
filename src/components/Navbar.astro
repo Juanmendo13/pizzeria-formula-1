@@ -2,21 +2,49 @@
 // src/components/Navbar.astro
 ---
 
-<nav class="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-12 h-16 bg-brand-black/97 border-b-2 border-brand-red">
-  <a href="#inicio" class="flex items-center gap-3">
-    <div class="checkered w-6 h-6 rounded-sm"></div>
-    <span class="text-white leading-none font-display text-xl tracking-wider">
-      PIZZERÍA <span class="text-brand-red">FÓRMULA 1</span>
-    </span>
-  </a>
+<nav class="fixed top-0 left-0 w-full bg-black/90 backdrop-blur-md border-b border-zinc-800 z-50 font-mono">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-20">
+      
+      {/* LOGO / NOMBRE */}
+      <div class="flex-shrink-0">
+        <a href="#" class="text-xl font-black italic tracking-wider text-white hover:text-red-500 transition">
+          🏁 FÓRMULA 1
+        </a>
+      </div>
 
-  <div class="hidden md:flex items-center gap-8">
-    <a href="#inicio" class="text-sm font-semibold tracking-widest text-brand-red font-condensed">INICIO</a>
-    <a href="#menu" class="text-sm font-semibold tracking-widest text-white/65 hover:text-brand-red font-condensed transition-colors">MENÚ</a>
-    <a href="#nosotros" class="text-sm font-semibold tracking-widest text-white/65 hover:text-brand-red font-condensed transition-colors">NOSOTROS</a>
-    <a href="#contacto" class="text-sm font-semibold tracking-widest text-white/65 hover:text-brand-red font-condensed transition-colors">CONTACTO</a>
-    <a href="tel:954740396" class="px-4 py-2 text-sm font-bold text-white bg-brand-red font-condensed tracking-wider hover:bg-brand-red-dark transition-colors">
-      📞 954 740 396
-    </a>
+      {/* ENLACES DE NAVEGACIÓN PRINCIPALES */}
+      <div class="hidden md:flex items-center space-x-8">
+        <a 
+          href="#carta" 
+          class="text-sm font-bold uppercase text-zinc-300 hover:text-white border-b-2 border-transparent hover:border-red-600 py-1 transition duration-200"
+        >
+          🍕 Pizzas
+        </a>
+        <a 
+          href="#complementos" 
+          class="text-sm font-bold uppercase text-zinc-300 hover:text-white border-b-2 border-transparent hover:border-red-600 py-1 transition duration-200"
+        >
+          🍟 Complementos
+        </a>
+        <a 
+          href="#contacto" 
+          class="text-sm font-bold uppercase text-zinc-300 hover:text-white border-b-2 border-transparent hover:border-red-600 py-1 transition duration-200"
+        >
+          🕒 Horarios y Mapa
+        </a>
+      </div>
+
+      {/* BOTÓN DE ACCIÓN: TELÉFONO */}
+      <div class="flex items-center">
+        <a 
+          href="tel:954740396" 
+          class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-xs font-bold uppercase rounded transition shadow-md shadow-red-950/50"
+        >
+          📞 Pedir: 954 74 03 96
+        </a>
+      </div>
+
+    </div>
   </div>
 </nav>
