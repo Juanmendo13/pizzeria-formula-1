@@ -1,0 +1,101 @@
+---
+// src/components/Footer.astro
+---
+
+<footer
+  class="bg-zinc-950 border-t border-zinc-800 text-zinc-400 font-mono text-sm mt-20"
+>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div
+      class="grid grid-cols-1 md:grid-cols-3 gap-10 border-b border-zinc-900 pb-10"
+    >
+      {/* BOX 1: HORARIOS REALES DE CARRERA */}
+      <div class="space-y-4">
+        <h4 class="text-white font-black italic uppercase tracking-wider text-base">
+          🏁 HORARIOS DE CARRERA
+        </h4>
+        <ul class="space-y-1 text-zinc-400 text-xs">
+          <li class="flex justify-between border-b border-zinc-900/50 pb-1">
+            <span>Lunes:</span>
+            <span class="text-zinc-200">18:30 - 0:30</span>
+          </li>
+          <li class="flex justify-between border-b border-zinc-900/50 pb-1">
+            <span>Martes y Jueves:</span>
+            <span class="text-zinc-200">19:00 - 24:00</span>
+          </li>
+          <li class="flex justify-between border-b border-zinc-900/50 pb-1">
+            <span>Miércoles:</span>
+            <span class="text-zinc-200">0:00 - 12:30 | 19:00 - 24:00</span>
+          </li>
+          <li class="flex justify-between border-b border-zinc-900/50 pb-1">
+            <span>Viernes:</span>
+            <span class="text-red-500 font-bold">0:00 - 15:30 | 19:00 - 0:30</span>
+          </li>
+          <li class="flex justify-between border-b border-zinc-900/50 pb-1">
+            <span>Sábado:</span>
+            <span class="text-red-500 font-bold">12:00 - 15:30 | 19:00 - 0:30</span>
+          </li>
+          <li class="flex justify-between pb-1">
+            <span>Domingo:</span>
+            <span class="text-zinc-200">12:00 - 15:30 | 19:00 - 24:00</span>
+          </li>
+        </ul>
+      </div>
+
+      {/* BOX 2: UBICACIÓN REAL (TOCINA) */}
+      <div class="space-y-4">
+        <h4 class="text-white font-black italic uppercase tracking-wider text-base">
+          📍 CIRCUITO PRINCIPAL
+        </h4>
+        <p class="text-zinc-300 leading-relaxed font-sans">
+          <span class="font-mono font-bold text-white block">Pizzería Fórmula 1</span>
+          Gran Avenida, 62<br />
+          <span class="text-zinc-500 text-sm font-mono">41340 Tocina, Sevilla, España</span>
+        </p>
+        <a 
+          href="https://www.google.com/maps/place/Pizzer%C3%ADa+F%C3%B3rmula+1/@37.6064198,-5.7330881,16z/data=!4m6!3m5!1s0xd1259ea2ed36e7b:0xa9e11116a09b798e!8m2!3d37.6061791!4d-5.7327765!16s%2Fg%2F11j32hnyx8?entry=ttu&g_ep=EgoyMDI2MDcxNC4wIKXMDSoASAFQAw%3D%3D" 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          class="inline-flex items-center gap-2 text-xs text-red-500 hover:text-red-400 font-bold uppercase tracking-wider transition group"
+        >
+          🗺️ Abrir en Google Maps <span class="transform group-hover:translate-x-1 transition-transform">&rarr;</span>
+        </a>
+      </div>
+
+      {/* BOX 3: CONTACTO RÁPIDO */}
+      <div class="space-y-4">
+        <h4
+          class="text-white font-black italic uppercase tracking-wider text-base"
+        >
+          📞 PEDIDOS A BOXES9
+        </h4>
+        <p class="text-zinc-400">
+          Haz tu pedido por teléfono para una recogida o reparto ultra rápido.
+        </p>
+        <div class="pt-2">
+          <a
+            href="tel:954740396"
+            class="inline-block px-5 py-3 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-white font-bold rounded-lg transition text-center w-full sm:w-auto"
+          >
+            ☎️ 954 74 03 96
+          </a>
+        </div>
+      </div>
+    </div>
+
+    {/* PARTE INFERIOR: COPYRIGHT */}
+    <div
+      class="pt-8 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-zinc-600"
+    >
+      <p>
+        &copy; {new Date().getFullYear()} Pizzería Fórmula 1. Todos los derechos reservados.
+      </p>
+      <div class="flex gap-4">
+        <span class="text-zinc-800">||</span>
+        <p class="font-sans tracking-wide">
+          Masa artesanal a máxima velocidad 🏎️
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
