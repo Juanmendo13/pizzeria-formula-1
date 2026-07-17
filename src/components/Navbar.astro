@@ -2,49 +2,92 @@
 // src/components/Navbar.astro
 ---
 
-<nav class="fixed top-0 left-0 w-full bg-black/90 backdrop-blur-md border-b border-zinc-800 z-50 font-mono">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="flex items-center justify-between h-20">
-      
-      {/* LOGO / NOMBRE */}
-      <div class="flex-shrink-0">
-        <a href="#" class="text-xl font-black italic tracking-wider text-white hover:text-red-500 transition">
-          🏁 FÓRMULA 1
-        </a>
-      </div>
+<header class="fixed top-0 left-0 w-full bg-zinc-950/95 border-b border-zinc-900 backdrop-blur-md z-50 print:hidden">
+  <div class="max-w-7xl mx-auto px-4 h-20 flex items-center justify-between">
+    <!-- Logo/Nombre -->
+    <a href="#" class="font-mono text-xl font-black uppercase tracking-wider text-white">
+      🍕 Pizzería <span class="text-red-600">Fórmula 1</span>
+    </a>
 
-      {/* ENLACES DE NAVEGACIÓN PRINCIPALES */}
-      <div class="hidden md:flex items-center space-x-8">
-        <a 
-          href="#carta" 
-          class="text-sm font-bold uppercase text-zinc-300 hover:text-white border-b-2 border-transparent hover:border-red-600 py-1 transition duration-200"
-        >
-          🍕 Pizzas
-        </a>
-        <a 
-          href="#complementos" 
-          class="text-sm font-bold uppercase text-zinc-300 hover:text-white border-b-2 border-transparent hover:border-red-600 py-1 transition duration-200"
-        >
-          🍟 Complementos
-        </a>
-        <a 
-          href="#contacto" 
-          class="text-sm font-bold uppercase text-zinc-300 hover:text-white border-b-2 border-transparent hover:border-red-600 py-1 transition duration-200"
-        >
-          🕒 Horarios y Mapa
-        </a>
-      </div>
+    <!-- Menú para Escritorio (Pantallas Grandes) -->
+    <nav class="hidden md:flex items-center gap-6 font-mono text-sm font-bold uppercase">
+      <a href="#escuderia" class="text-zinc-400 hover:text-white transition">La Escudería</a>
+      <a href="#carta" class="text-zinc-400 hover:text-white transition">La Carta</a>
+      <a href="#complementos" class="text-zinc-400 hover:text-white transition">Complementos</a>
+      <a href="#contacto" class="text-zinc-400 hover:text-white transition">Contacto</a>
+    </nav>
 
-      {/* BOTÓN DE ACCIÓN: TELÉFONO */}
-      <div class="flex items-center">
-        <a 
-          href="tel:954740396" 
-          class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-xs font-bold uppercase rounded transition shadow-md shadow-red-950/50"
-        >
-          📞 Pedir: 954 74 03 96
-        </a>
-      </div>
-
-    </div>
+    <!-- Botón Hamburguesa para Móvil -->
+    <button 
+      id="menu-toggle"
+      class="flex md:hidden flex-col justify-center items-center w-10 h-10 border border-zinc-800 rounded-lg bg-zinc-900 text-zinc-400 hover:text-white focus:outline-none p-2 gap-1.5 transition duration-200"
+      aria-label="Abrir menú de boxes"
+    >
+      <span class="w-5 h-0.5 bg-current transition-transform duration-300 transform raw-line"></span>
+      <span class="w-5 h-0.5 bg-current transition-opacity duration-300 transform raw-line"></span>
+      <span class="w-5 h-0.5 bg-current transition-transform duration-300 transform raw-line"></span>
+    </button>
   </div>
-</nav>
+
+  <!-- Desplegable Móvil (Oculto por defecto con max-h-0) -->
+  <div 
+    id="mobile-menu" 
+    class="md:hidden max-h-0 overflow-hidden bg-zinc-950 border-b border-zinc-900 transition-all duration-300 ease-in-out font-mono text-sm font-bold uppercase"
+  >
+    <nav class="flex flex-col px-4 pt-2 pb-6 gap-4 border-t border-zinc-900/50">
+      <a href="#escuderia" class="mobile-link text-zinc-400 hover:text-white py-2 transition border-b border-zinc-900/30">La Escudería</a>
+      <a href="#carta" class="mobile-link text-zinc-400 hover:text-white py-2 transition border-b border-zinc-900/30">La Carta</a>
+      <a href="#complementos" class="mobile-link text-zinc-400 hover:text-white py-2 transition border-b border-zinc-900/30">Complementos</a>
+      <a href="#contacto" class="mobile-link text-zinc-400 hover:text-white py-2 transition">Contacto</a>
+    </nav>
+  </div>
+</header>
+
+<script>
+  const menuToggle = document.getElementById('menu-toggle');
+  const mobileMenu = document.getElementById('mobile-menu');
+  const mobileLinks = document.querySelectorAll('.mobile-link');
+  const lines = menuToggle?.querySelectorAll('.raw-line');
+
+  function toggleMenu() {
+    if (mobileMenu?.classList.contains('max-h-0')) {
+      // Abrir menú (Calculamos un max-height seguro para la animación)
+      mobileMenu.classList.remove('max-h-0');
+      mobileMenu.classList.add('max-h-64');
+      
+      // Animación icono hamburguesa a "X"
+      if (lines && lines.length === 3) {
+        lines[0].classList.add('translate-y-2', 'rotate-45');
+        lines[1].classList.add('opacity-0');
+        lines[2].classList.add('-translate-y-2', '-rotate-45');
+      }
+    } else {
+      // Cerrar menú
+      mobileMenu?.classList.remove('max-h-64');
+      mobileMenu?.classList.add('max-h-0');
+      
+      // Restaurar icono hamburguesa
+      if (lines && lines.length === 3) {
+        lines[0].classList.remove('translate-y-2', 'rotate-45');
+        lines[1].classList.remove('opacity-0');
+        lines[2].classList.remove('-translate-y-2', '-rotate-45');
+      }
+    }
+  }
+
+  // Escuchar el click en el botón
+  menuToggle?.addEventListener('click', toggleMenu);
+
+  // Cerrar el menú automáticamente al pulsar cualquier enlace
+  mobileLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      mobileMenu?.classList.remove('max-h-64');
+      mobileMenu?.classList.add('max-h-0');
+      if (lines && lines.length === 3) {
+        lines[0].classList.remove('translate-y-2', 'rotate-45');
+        lines[1].classList.remove('opacity-0');
+        lines[2].classList.remove('-translate-y-2', '-rotate-45');
+      }
+    });
+  });
+</script>

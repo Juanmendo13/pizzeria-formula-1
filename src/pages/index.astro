@@ -47,7 +47,46 @@ import menu from '../data/menu.json';
       <Ticker />
     </div>
 
-    {/* 3. La Grid de Pizzas */}
+    {/* 3. Sección: La Escudería (Sobre Nosotros) */}
+    <section id="escuderia" class="pt-24 pb-12 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto scroll-mt-20">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+        <div>
+          <span class="text-red-500 font-mono text-xs uppercase tracking-widest font-bold block mb-2">
+            🏎️ Desde el Garaje
+          </span>
+          <h2 class="text-3xl md:text-5xl font-black font-mono italic uppercase mb-6">
+            Nuestra Historia
+          </h2>
+          <div class="space-y-4 text-zinc-400 leading-relaxed text-sm md:text-base">
+            <p>
+              Fundada por apasionados del motor y de la buena mesa, <strong class="text-white">Pizzería Fórmula 1</strong> nació con un objetivo claro: romper el cronómetro del sabor sin sacrificar la calidad artesanal.
+            </p>
+            <p>
+              Cada mañana encendemos los motores de nuestros hornos para alcanzar la temperatura perfecta de carrera. Estiramos la masa a mano siguiendo técnicas tradicionales y seleccionamos los ingredientes más frescos para que cada porción sea una vuelta rápida perfecta.
+            </p>
+            <p class="border-l-2 border-red-600 pl-4 italic text-zinc-300 font-mono text-xs md:text-sm">
+              "No solo hacemos pizzas rápidas; diseñamos alta ingeniería gastronómica para llevarte directo al podio."
+            </p>
+          </div>
+        </div>
+        
+        {/* Espacio para imagen del local o equipo */}
+        <div class="relative group rounded-2xl overflow-hidden border border-zinc-800 bg-zinc-900/50 p-2">
+          <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent z-10"></div>
+          <img 
+            src="/images/nosotros-boxes.jpg" 
+            alt="Nuestros maestros pizzeros en boxes" 
+            class="w-full h-80 object-cover rounded-xl grayscale group-hover:grayscale-0 transition duration-500"
+          />
+          <div class="absolute bottom-6 left-6 z-20 font-mono">
+            <p class="text-xs text-red-500 uppercase font-bold">Jefe de Escudería</p>
+            <p class="text-lg font-black uppercase text-white">El Equipo de Boxes</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {/* 4. La Grid de Pizzas */}
     <section id="carta" class="pt-24 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto scroll-mt-20">
       <div class="text-center mb-16">
         <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-red-500/30 bg-red-500/10 text-red-500 font-mono text-xs uppercase tracking-wider mb-4">
@@ -74,8 +113,27 @@ import menu from '../data/menu.json';
       </div>
     </section>
 
-    {/* 4. Zona de Descarga de PDF */}
-    <div class="flex flex-col sm:flex-row justify-center items-center gap-4 pb-20 px-4">
+    {/* 5. Aviso Técnico de Alérgenos */}
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
+      <div class="bg-zinc-950/50 border border-zinc-900 rounded-xl p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div class="flex items-center gap-3">
+          <span class="text-xl">⚠️</span>
+          <div>
+            <h4 class="font-mono text-sm font-bold text-white uppercase">Especificaciones de Seguridad (Alérgenos)</h4>
+            <p class="text-xs text-zinc-500">Nuestras masas estándar contienen gluten. Disponemos de opciones adaptadas bajo petición previa en boxes.</p>
+          </div>
+        </div>
+        <div class="flex flex-wrap gap-2 text-xs font-mono text-zinc-400 bg-black px-3 py-2 rounded-lg border border-zinc-900">
+          <span class="text-red-500 font-bold">[G]</span> Gluten
+          <span class="text-red-500 font-bold">[L]</span> Lácteos
+          <span class="text-red-500 font-bold">[H]</span> Huevo
+          <span class="text-red-500 font-bold">[N]</span> Frutos de cáscara
+        </div>
+      </div>
+    </div>
+
+    {/* 6. Zona de Descarga de PDF */}
+    <div class="flex flex-col sm:flex-row justify-center items-center gap-4 pb-20 px-4 print:hidden">
       <a 
         href="/carta-formula1.pdf" 
         download
@@ -93,7 +151,7 @@ import menu from '../data/menu.json';
       </a>
     </div>
 
-    {/* 5. Sección de Complementos Rediseñada */}
+    {/* 7. Sección de Complementos */}
     <section id="complementos" class="pb-32 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto scroll-mt-24">
       <div class="text-center mb-12">
         <h3 class="text-2xl md:text-3xl font-black font-mono italic uppercase tracking-tight">
@@ -102,7 +160,6 @@ import menu from '../data/menu.json';
         <p class="text-zinc-500 text-xs font-mono mt-2">Acompaña tu menú principal antes de ver la bandera a cuadros</p>
       </div>
 
-      {/* Grid responsivo de 2 columnas para equilibrar la vista */}
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
         {menu.otrasCategorias.map((seccion) => (
           <MenuSection 
@@ -116,8 +173,38 @@ import menu from '../data/menu.json';
     </section>
   </main>
 
-  {/* 6. Footer de la Página (Con contenedor de anclaje para el menú) */}
+  {/* 8. Footer de la Página */}
   <div id="contacto" class="scroll-mt-24">
     <Footer />
   </div>
+
+  {/* 9. Botón Volver Arriba Flotante */}
+  <button
+    id="btn-back-to-top"
+    class="fixed bottom-6 right-6 z-50 p-4 bg-zinc-950 hover:bg-zinc-900 border-2 border-zinc-800 hover:border-red-600 text-red-600 hover:text-white rounded-xl shadow-2xl shadow-black/80 font-mono text-xl font-black uppercase transition-all duration-300 translate-y-20 opacity-0 pointer-events-none print:hidden group"
+    aria-label="Volver arriba"
+  >
+    <span class="inline-block transform group-hover:-translate-y-1 transition-transform">▲</span>
+  </button>
+
+  <script>
+    const backToTopBtn = document.getElementById('btn-back-to-top');
+
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 400) {
+        backToTopBtn?.classList.remove('translate-y-20', 'opacity-0', 'pointer-events-none');
+        backToTopBtn?.classList.add('translate-y-0', 'opacity-100', 'pointer-events-auto');
+      } else {
+        backToTopBtn?.classList.add('translate-y-20', 'opacity-0', 'pointer-events-none');
+        backToTopBtn?.classList.remove('translate-y-0', 'opacity-100', 'pointer-events-auto');
+      }
+    });
+
+    backToTopBtn?.addEventListener('click', () => {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    });
+  </script>
 </Layout>
