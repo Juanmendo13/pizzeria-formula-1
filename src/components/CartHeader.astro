@@ -1,0 +1,36 @@
+---
+const cartLink =
+  'relative inline-flex items-center justify-center w-10 h-10 bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 hover:border-red-600 text-white rounded-lg transition';
+---
+
+<a
+  href="/carrito"
+  class={cartLink}
+  aria-label="Ver carrito"
+  data-cart-link
+>
+  <span aria-hidden="true">🛒</span>
+  <span
+    class="absolute -top-1.5 -right-1.5 min-w-[1.25rem] h-5 px-1 flex items-center justify-center rounded-full bg-red-600 text-white font-mono text-[10px] font-bold hidden"
+    data-cart-count
+  >
+    0
+  </span>
+</a>
+
+<script>
+  import { getCartCount } from '../lib/cart.ts';
+
+  const badge = document.querySelector('[data-cart-count]');
+
+  function refreshCount() {
+    const count = getCartCount();
+    if (!badge) return;
+    badge.textContent = String(count);
+    badge.classList.toggle('hidden', count <= 0);
+  }
+
+  refreshCount();
+  window.addEventListener('cart-updated', refreshCount);
+  window.addEventListener('storage', refreshCount);
+</script>

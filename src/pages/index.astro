@@ -9,6 +9,7 @@ import PizzaCard from '../components/PizzaCard.astro';
 import MenuSection from '../components/MenuSection.astro';
 import Footer from '../components/Footer.astro';
 import menu from '../data/menu.json';
+import { slugify } from '../lib/menu-slug.ts';
 import nosotrosBoxes from '../assets/nosotros-boxes.jpg';
 ---
 
@@ -114,6 +115,7 @@ import nosotrosBoxes from '../assets/nosotros-boxes.jpg';
         {menu.pizzas.map((pizza) => (
           <PizzaCard 
             id={pizza.id}
+            slug={`pizza-${pizza.id}`}
             nombre={pizza.nombre}
             ingredientes={pizza.ingredientes}
             imagen={pizza.imagen}
@@ -175,7 +177,10 @@ import nosotrosBoxes from '../assets/nosotros-boxes.jpg';
           <MenuSection 
             categoria={seccion.categoria}
             imagen={seccion.imagen}
-            items={seccion.items}
+            items={seccion.items.map((item) => ({
+              ...item,
+              slug: `${seccion.id}-${slugify(item.nombre)}`,
+            }))}
             nota={seccion.nota}
           />
         ))}

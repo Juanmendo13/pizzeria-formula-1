@@ -1,0 +1,137 @@
+---
+interface Props {
+  slug: string;
+  nombre: string;
+  signedIn: boolean;
+  isPizza: boolean;
+  precios?: { pequeña: number; mediana: number; familiar: number };
+  precioNumero?: number;
+  imagen?: string;
+}
+
+const { slug, nombre, signedIn, isPizza, precios, precioNumero, imagen } = Astro.props;
+
+const sizes = isPizza && precios
+  ? [
+      { key: 'pequeña', label: 'Pequeña', price: precios.pequeña },
+      { key: 'mediana', label: 'Mediana', price: precios.mediana },
+      { key: 'familiar', label: 'Familiar', price: precios.familiar },
+    ]
+  : [];
+---
+
+<div class="space-y-6" data-product-actions>
+  {
+    isPizza && sizes.length > 0 && (
+      <div>
+        <p class="font-mono text-xs uppercase tracking-wider text-zinc-500 mb-3">Elige tamaño</p>
+        <div class="grid grid-cols-3 gap-3" role="radiogroup" aria-label="Tamaño de pizza">
+          {sizes.map((size, index) => (
+            <label class="cursor-pointer">
+              <input
+                type="radio"
+                name="pizza-size"
+                value={size.key}
+                checked={index === 1}
+                class="peer sr-only"
+                data-size={size.key}
+                data-size-label={size.label}
+                data-price={size.price}
+              />
+              <div class="rounded-lg border border-zinc-800 bg-zinc-950 px-3 py-3 text-center transition peer-checked:border-red-600 peer-checked:bg-red-950/30 hover:border-zinc-600">
+                <p class="font-mono text-[10px] uppercase tracking-wider text-zinc-500">{size.label}</p>
+                <p class="font-mono text-sm font-bold text-red-500">
+                  {size.price.toFixed(2).replace('.', ',')}€
+                </p>
+              </div>
+            </label>
+          ))}
+        </div>
+      </div>
+    )
+  }
+
+  {
+    !isPizza && precioNumero !== undefined && (
+      <div class="rounded-lg border border-zinc-800 bg-zinc-950 px-4 py-3 inline-block">
+        <p class="font-mono text-xs uppercase tracking-wider text-zinc-500">Precio</p>
+        <p class="font-mono text-2xl font-bold text-red-500">{precioNumero.toFixed(2).replace('.', ',')}€</p>
+      </div>
+    )
+  }
+
+  <button
+    type="button"
+    class="w-full sm:w-auto px-8 py-4 bg-red-600 hover:bg-red-700 text-white font-mono font-bold uppercase rounded-lg transition shadow-lg shadow-red-900/30"
+    data-add-to-cart
+  >
+    Añadir al carrito
+  </button>
+
+  <p class="text-sm text-zinc-500 font-mono hidden" data-cart-feedback></p>
+</div>
+
+<script define:vars={{ slug, nombre, signedIn, isPizza, precioNumero, imagen }}>
+  const root = document.querySelector('[data-product-actions]');
+  const addBtn = root?.querySelector('[data-add-to-cart]');
+  const feedback = root?.querySelector('[data-cart-feedback]');
+
+  function getSelectedSize() {
+    const selected = root?.querySelector('input[name="pizza-size"]:checked');
+    if (!selected) return null;
+    return {
+      size: selected.getAttribute('data-size'),
+      sizeLabel: selected.getAttribute('data-size-label'),
+      price: Number(selected.getAttribute('data-price')),
+    };
+  }
+
+  function showFeedback(message, ok = true) {
+    if (!feedback) return;
+    feedback.textContent = message;
+    feedback.classList.remove('hidden', 'text-red-400', 'text-green-400');
+    feedback.classList.add(ok ? 'text-green-400' : 'text-red-400');
+  }
+
+  addBtn?.addEventListener('click', async () => {
+    const returnUrl = encodeURIComponent(window.location.pathname);
+
+    if (!signedIn) {
+      window.location.href = `/sign-in?redirect_url=${returnUrl}`;
+      return;
+    }
+
+    const { addToCart, cartLineKey } = await import('../lib/cart.ts');
+
+    if (isPizza) {
+      const selected = getSelectedSize();
+      if (!selected?.size) {
+        showFeedback('Elige un tamaño antes de añadir.', false);
+        return;
+      }
+
+      addToCart({
+        key: cartLineKey(slug, selected.size),
+        slug,
+        nombre,
+        size: selected.size,
+        sizeLabel: selected.sizeLabel,
+        precio: selected.price,
+        imagen,
+      });
+      showFeedback(`Añadida (${selected.sizeLabel}) al carrito.`);
+      return;
+    }
+
+    if (precioNumero === undefined) return;
+
+    addToCart({
+      key: cartLineKey(slug),
+      slug,
+      nombre,
+      precio: precioNumero,
+      imagen,
+    });
+    showFeedback('Añadido al carrito.');
+  });
+</script>

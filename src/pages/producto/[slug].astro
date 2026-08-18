@@ -1,0 +1,153 @@
+---
+export const prerender = false;
+
+import type { ImageMetadata } from 'astro';
+import { Image } from 'astro:assets';
+import Layout from '../../layouts/Layout.astro';
+import Navbar from '../../components/Navbar.astro';
+import ProductActions from '../../components/ProductActions.astro';
+import Footer from '../../components/Footer.astro';
+import { getProductBySlug, formatEuro, PIZZA_SIZE_LABELS } from '../../lib/menu.ts';
+import type { PizzaSize } from '../../lib/menu.ts';
+
+const { slug } = Astro.params;
+
+if (!slug) {
+  return Astro.redirect('/');
+}
+
+const product = getProductBySlug(slug);
+
+if (!product) {
+  return Astro.redirect('/');
+}
+
+let signedIn = false;
+
+try {
+  const auth = Astro.locals.auth ? await Promise.resolve(Astro.locals.auth()) : undefined;
+  signedIn = Boolean(auth?.userId);
+} catch {
+  signedIn = false;
+}
+
+const imagenesPizzas = import.meta.glob<{ default: ImageMetadata }>(
+  '/src/assets/pizzas/*.{jpeg,jpg,png,gif,webp}',
+  { eager: true },
+);
+const imagenesCategorias = import.meta.glob<{ default: ImageMetadata }>(
+  '/src/assets/categorias/*.{jpeg,jpg,png,gif,webp}',
+  { eager: true },
+);
+
+const pizzaImg =
+  product.type === 'pizza' && product.imagen
+    ? imagenesPizzas[`/src/assets/pizzas/${product.imagen}`]
+    : undefined;
+const catImg =
+  product.type === 'item' && product.imagen
+    ? imagenesCategorias[`/src/assets/categorias/${product.imagen}`]
+    : undefined;
+
+const pageTitle = `${product.nombre} | Pizzería Fórmula 1`;
+---
+
+<Layout title={pageTitle}>
+  <Navbar />
+
+  <main class="bg-black min-h-screen text-white pt-28 pb-20 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-5xl mx-auto">
+      <a
+        href="/#carta"
+        class="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-zinc-500 hover:text-white transition mb-8"
+      >
+        ← Volver a la carta
+      </a>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-10 items-start">
+        <div class="relative aspect-square max-w-md mx-auto md:mx-0 w-full rounded-2xl overflow-hidden border border-zinc-800 bg-zinc-900">
+          {pizzaImg && (
+            <Image
+              src={pizzaImg.default}
+              alt={product.nombre}
+              width={600}
+              height={600}
+              densities={[1, 2]}
+              quality={75}
+              class="w-full h-full object-cover"
+            />
+          )}
+          {catImg && (
+            <Image
+              src={catImg.default}
+              alt={product.nombre}
+              width={600}
+              height={600}
+              densities={[1, 2]}
+              quality={75}
+              class="w-full h-full object-cover"
+            />
+          )}
+          {product.type === 'pizza' && (
+            <span class="absolute top-4 left-4 bg-red-600 text-white font-mono text-sm font-bold px-3 py-1 rounded-md">
+              {product.id}
+            </span>
+          )}
+          {product.nuevo && (
+            <span class="absolute top-4 right-4 font-mono text-[10px] uppercase tracking-wider bg-red-600 text-white px-2 py-1 rounded">
+              New
+            </span>
+          )}
+        </div>
+
+        <div class="text-left">
+          {product.categoria && (
+            <p class="font-mono text-xs uppercase tracking-widest text-red-500 mb-2">{product.categoria}</p>
+          )}
+          <h1 class="text-3xl md:text-4xl font-black font-mono uppercase tracking-tight mb-4">
+            {product.nombre}
+          </h1>
+
+          {(product.ingredientes || product.descripcion) && (
+            <p class="text-zinc-400 leading-relaxed mb-6">
+              {product.ingredientes ?? product.descripcion}
+            </p>
+          )}
+
+          {
+            product.type === 'pizza' && product.precios && (
+              <div class="grid grid-cols-3 gap-3 mb-8">
+                {(Object.entries(product.precios) as [PizzaSize, number][]).map(([size, price]) => (
+                  <div class="rounded-lg border border-zinc-800 bg-zinc-950 px-3 py-3 text-center">
+                    <p class="font-mono text-[10px] uppercase tracking-wider text-zinc-500">
+                      {PIZZA_SIZE_LABELS[size]}
+                    </p>
+                    <p class="font-mono text-lg font-bold text-red-500">{formatEuro(price)}</p>
+                  </div>
+                ))}
+              </div>
+            )
+          }
+
+          <ProductActions
+            slug={product.slug}
+            nombre={product.nombre}
+            signedIn={signedIn}
+            isPizza={product.type === 'pizza'}
+            precios={product.precios}
+            precioNumero={product.precioNumero}
+            imagen={product.imagen}
+          />
+
+          {!signedIn && (
+            <p class="mt-4 text-xs text-zinc-500 font-mono">
+              Para añadir al carrito necesitas iniciar sesión o registrarte.
+            </p>
+          )}
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <Footer />
+</Layout>

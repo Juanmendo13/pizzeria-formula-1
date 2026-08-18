@@ -14,14 +14,18 @@ Cómo usarlo:
 
 ## Pendiente
 
-- Al imprimir PDF / página imprimir-carta, no aparece la pizza Texana (id 10). Incluirla.
-- Carrito de compra para pedidos online (añadir productos, cantidades, header con contador).
+- Localhost: arrancar con `pnpm astro dev` (no `vercel --prod`). En Clerk Dashboard → Allowed origins incluir `http://localhost:4321` y `https://pizzeria-formula-1.vercel.app`.
+- Activar Google y Facebook en Clerk (conexiones sociales + apps OAuth) para que el login social funcione en local y en producción.
+
+
 
 ## En curso
 
 - Inicios de sesión en el header (Clerk): UI de Entrar / Registro ya en el navbar.
-  - Pendiente de ti: crear app en https://dashboard.clerk.com, activar Email, Google y Facebook, y pegar las claves en `.env.local` y en Vercel.
+  - Pendiente de ti: activar Email, Google y Facebook en [https://dashboard.clerk.com](https://dashboard.clerk.com) y pegar las claves en `.env.local` y en Vercel.
   - Correo + contraseña envía email de verificación automáticamente (no Google/Facebook).
+
+
 
 ## Hecho
 
@@ -29,4 +33,7 @@ Cómo usarlo:
 - Optimizar la carga de [https://pizzeria-formula-1.vercel.app/](https://pizzeria-formula-1.vercel.app/) (fuentes, imágenes, HTML estático).
 - Cargar precios e ingredientes de las pizzas 00–10 desde la foto de la carta (pequeña / mediana / familiar).
 - Cargar precios e ingredientes del resto de la carta (para picar, ensaladas, serranitos, hamburguesas, sandwiches, kebab, pastas y postres).
-
+- Reparar «Descargar menú PDF» (ruta `/categorias/carta-formula1.pdf`).
+- Texana (id 10) incluida al imprimir carta: pizzas repartidas en dos páginas en `/imprimir-carta`.
+- Ficha de producto (`/producto/[slug]`): ingredientes, precios y tamaños al clicar cualquier producto.
+- Carrito de compra: añadir productos, cantidades, resumen en `/carrito`, icono con contador en el header solo con sesión iniciada. Sin sesión, «Añadir al carrito» redirige a login/registro.

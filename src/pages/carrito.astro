@@ -1,0 +1,153 @@
+---
+export const prerender = false;
+
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+import { formatEuro } from '../lib/menu.ts';
+
+let signedIn = false;
+
+try {
+  const auth = Astro.locals.auth ? await Promise.resolve(Astro.locals.auth()) : undefined;
+  signedIn = Boolean(auth?.userId);
+} catch {
+  signedIn = false;
+}
+
+if (!signedIn) {
+  return Astro.redirect('/sign-in?redirect_url=%2Fcarrito');
+}
+---
+
+<Layout title="Carrito | Pizzería Fórmula 1">
+  <Navbar />
+
+  <main class="bg-black min-h-screen text-white pt-28 pb-20 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-3xl mx-auto">
+      <h1 class="text-3xl md:text-4xl font-black font-mono uppercase tracking-tight mb-2">
+        Tu carrito
+      </h1>
+      <p class="text-zinc-500 font-mono text-sm mb-10">Revisa cantidades antes de confirmar el pedido.</p>
+
+      <div data-cart-empty class="hidden rounded-xl border border-zinc-800 bg-zinc-950 p-8 text-center">
+        <p class="text-zinc-400 mb-6">El carrito está vacío.</p>
+        <a
+          href="/#carta"
+          class="inline-flex px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-mono text-sm font-bold uppercase rounded-lg transition"
+        >
+          Ver la carta
+        </a>
+      </div>
+
+      <div data-cart-content class="hidden space-y-4">
+        <ul class="divide-y divide-zinc-900 border border-zinc-800 rounded-xl overflow-hidden bg-zinc-950" data-cart-lines></ul>
+
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pt-4 border-t border-zinc-800">
+          <div>
+            <p class="font-mono text-xs uppercase tracking-wider text-zinc-500">Total</p>
+            <p class="font-mono text-3xl font-bold text-red-500" data-cart-total>0,00€</p>
+          </div>
+          <div class="flex flex-wrap gap-3">
+            <button
+              type="button"
+              class="px-5 py-3 bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-white font-mono text-xs font-bold uppercase rounded-lg transition"
+              data-clear-cart
+            >
+              Vaciar
+            </button>
+            <a
+              href="/#contacto"
+              class="px-5 py-3 bg-red-600 hover:bg-red-700 text-white font-mono text-xs font-bold uppercase rounded-lg transition"
+            >
+              Confirmar pedido
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <Footer />
+</Layout>
+
+<script>
+  import {
+    getCart,
+    updateCartQuantity,
+    clearCart,
+    getCartTotal,
+  } from '../lib/cart.ts';
+  import { formatEuro } from '../lib/menu.ts';
+
+  const emptyEl = document.querySelector('[data-cart-empty]');
+  const contentEl = document.querySelector('[data-cart-content]');
+  const linesEl = document.querySelector('[data-cart-lines]');
+  const totalEl = document.querySelector('[data-cart-total]');
+  const clearBtn = document.querySelector('[data-clear-cart]');
+
+  function renderCart() {
+    const cart = getCart();
+    const isEmpty = cart.length === 0;
+
+    emptyEl?.classList.toggle('hidden', !isEmpty);
+    contentEl?.classList.toggle('hidden', isEmpty);
+
+    if (!linesEl || isEmpty) return;
+
+    linesEl.innerHTML = cart
+      .map(
+        (line) => `
+        <li class="p-4 flex flex-col sm:flex-row sm:items-center gap-4" data-line-key="${line.key}">
+          <div class="flex-grow min-w-0">
+            <p class="font-mono font-bold text-white uppercase truncate">${line.nombre}</p>
+            ${
+              line.sizeLabel
+                ? `<p class="text-xs text-zinc-500 font-mono mt-1">Tamaño: ${line.sizeLabel}</p>`
+                : ''
+            }
+            <p class="text-sm text-red-500 font-mono mt-1">${formatEuro(line.precio)} / ud.</p>
+          </div>
+          <div class="flex items-center gap-3 shrink-0">
+            <button type="button" class="w-9 h-9 rounded-lg border border-zinc-700 bg-zinc-900 text-white font-bold" data-qty-minus aria-label="Quitar uno">−</button>
+            <span class="font-mono w-8 text-center" data-qty-display>${line.quantity}</span>
+            <button type="button" class="w-9 h-9 rounded-lg border border-zinc-700 bg-zinc-900 text-white font-bold" data-qty-plus aria-label="Añadir uno">+</button>
+            <span class="font-mono font-bold text-white w-20 text-right">${formatEuro(line.precio * line.quantity)}</span>
+          </div>
+        </li>
+      `,
+      )
+      .join('');
+
+    if (totalEl) {
+      totalEl.textContent = formatEuro(getCartTotal());
+    }
+
+    linesEl.querySelectorAll('[data-line-key]').forEach((row) => {
+      const key = row.getAttribute('data-line-key');
+      if (!key) return;
+
+      row.querySelector('[data-qty-minus]')?.addEventListener('click', () => {
+        const current = getCart().find((item) => item.key === key);
+        if (!current) return;
+        updateCartQuantity(key, current.quantity - 1);
+        renderCart();
+      });
+
+      row.querySelector('[data-qty-plus]')?.addEventListener('click', () => {
+        const current = getCart().find((item) => item.key === key);
+        if (!current) return;
+        updateCartQuantity(key, current.quantity + 1);
+        renderCart();
+      });
+    });
+  }
+
+  clearBtn?.addEventListener('click', () => {
+    clearCart();
+    renderCart();
+  });
+
+  renderCart();
+  window.addEventListener('cart-updated', renderCart);
+</script>

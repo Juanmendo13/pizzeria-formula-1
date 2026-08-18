@@ -15,6 +15,9 @@ const imagenesCategorias = import.meta.glob<{ default: ImageMetadata }>(
   '/src/assets/categorias/*.{jpeg,jpg,png,gif,webp}',
   { eager: true },
 );
+
+const pizzasPrimeraPagina = menuData.pizzas.slice(0, 6);
+const pizzasSegundaPagina = menuData.pizzas.slice(6);
 ---
 
 <!doctype html>
@@ -53,12 +56,12 @@ const imagenesCategorias = import.meta.glob<{ default: ImageMetadata }>(
       .grid-pizzas {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        grid-template-rows: repeat(6, minmax(0, 1fr));
+        grid-auto-rows: min-content;
         column-gap: 2rem;
-        row-gap: 0.35rem;
+        row-gap: 0.3rem;
         flex: 1 1 auto;
         min-height: 0;
-        align-content: stretch;
+        align-content: start;
       }
 
       .pagina-menu:last-child {
@@ -151,7 +154,7 @@ const imagenesCategorias = import.meta.glob<{ default: ImageMetadata }>(
 
       <div class="grid-pizzas px-2">
         {
-          menuData.pizzas.map((pizza) => {
+          pizzasPrimeraPagina.map((pizza) => {
             const pizzaImg = imagenesPizzas[`/src/assets/pizzas/${pizza.imagen}`];
             return (
               <div class="flex items-center gap-3 border-b border-zinc-900 pb-1 min-h-0">
@@ -194,7 +197,63 @@ const imagenesCategorias = import.meta.glob<{ default: ImageMetadata }>(
       </div>
     </div>
 
-    <!-- ================= PÁGINA 2: EN BOXES (TODO EL RESTO COMPACTADO SIN HUECOS) ================= -->
+    <!-- ================= PÁGINA 2: PIZZAS 06–10 (TEXANA INCLUIDA) ================= -->
+    <div class="pagina-menu">
+      <div class="text-center border-b-4 border-red-600 pb-1.5 mb-3">
+        <div class="text-red-500 font-racing text-[10px] tracking-widest uppercase mb-0.5">
+          Official Track Menu
+        </div>
+        <h1 class="text-2xl font-black tracking-wider text-white uppercase font-racing italic">
+          PIZZAS (CONTINUACIÓN)
+        </h1>
+      </div>
+
+      <div class="grid-pizzas px-2 mt-4">
+        {
+          pizzasSegundaPagina.map((pizza) => {
+            const pizzaImg = imagenesPizzas[`/src/assets/pizzas/${pizza.imagen}`];
+            return (
+              <div class="flex items-center gap-3 border-b border-zinc-900 pb-1 min-h-0">
+                {pizzaImg && (
+                  <div class="w-10 h-10 rounded-lg overflow-hidden border border-red-600/30 flex-shrink-0 bg-zinc-900">
+                    <Image
+                      src={pizzaImg.default}
+                      alt={pizza.nombre}
+                      width={40}
+                      height={40}
+                      densities={[2]}
+                      quality={60}
+                      loading="eager"
+                      decoding="async"
+                      class="w-full h-full object-cover"
+                    />
+                  </div>
+                )}
+                <div class="flex-grow min-w-0">
+                  <div class="flex justify-between items-end w-full">
+                    <h3 class="text-lg font-bold text-white uppercase tracking-wide truncate">
+                      <span class="text-red-500 text-red-important font-mono mr-1">
+                        {pizza.id}.
+                      </span>{" "}
+                      {pizza.nombre}
+                    </h3>
+                    <div class="linea-puntos" />
+                    <span class="text-red-500 text-red-important font-mono font-bold text-xs whitespace-nowrap">
+                      {pizza.precios.pequeña.toFixed(2).replace('.', ',')} / {pizza.precios.mediana.toFixed(2).replace('.', ',')} / {pizza.precios.familiar.toFixed(2).replace('.', ',')}€
+                    </span>
+                  </div>
+                  <p class="text-zinc-400 text-zinc-important text-xs italic font-sans leading-tight pr-2 truncate">
+                    {pizza.ingredientes}
+                  </p>
+                </div>
+              </div>
+            );
+          })
+        }
+      </div>
+    </div>
+
+    <!-- ================= PÁGINA 3: EN BOXES (COMPLEMENTOS) ================= -->
     <div class="pagina-menu">
       <div class="text-center mb-5 mt-2">
         <h2 class="text-2xl font-bold font-racing text-red-500 text-red-important uppercase tracking-widest italic inline-block bg-zinc-900 bg-box-important border border-zinc-800 px-8 py-1.5 rounded-xl">

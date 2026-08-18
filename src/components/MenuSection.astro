@@ -7,6 +7,7 @@ interface Item {
   descripcion?: string;
   precio: string;
   nuevo?: boolean;
+  slug: string;
 }
 
 interface Props {
@@ -39,21 +40,26 @@ const { categoria, imagen, items, nota } = Astro.props;
     
     <ul class="divide-y divide-zinc-900">
       {items.map((item) => (
-        <li class="flex justify-between items-start py-4 gap-6">
-          <div class="flex flex-col gap-1">
-            <span class="text-zinc-100 font-bold text-base inline-flex items-center gap-2 flex-wrap">
-              {item.nombre}
-              {item.nuevo && (
-                <span class="font-mono text-[10px] uppercase tracking-wider bg-red-600 text-white px-1.5 py-0.5 rounded">New</span>
+        <li>
+          <a
+            href={`/producto/${item.slug}`}
+            class="flex justify-between items-start py-4 gap-6 hover:bg-zinc-900/40 -mx-2 px-2 rounded-lg transition group"
+          >
+            <div class="flex flex-col gap-1 min-w-0">
+              <span class="text-zinc-100 font-bold text-base inline-flex items-center gap-2 flex-wrap group-hover:text-white">
+                {item.nombre}
+                {item.nuevo && (
+                  <span class="font-mono text-[10px] uppercase tracking-wider bg-red-600 text-white px-1.5 py-0.5 rounded">New</span>
+                )}
+              </span>
+              {item.descripcion && (
+                <p class="text-zinc-500 text-sm leading-relaxed">{item.descripcion}</p>
               )}
+            </div>
+            <span class="font-mono font-bold text-red-500 bg-red-950/30 border border-red-900/30 px-2.5 py-1 rounded text-sm whitespace-nowrap shrink-0">
+              {item.precio}
             </span>
-            {item.descripcion && (
-              <p class="text-zinc-500 text-sm leading-relaxed">{item.descripcion}</p>
-            )}
-          </div>
-          <span class="font-mono font-bold text-red-500 bg-red-950/30 border border-red-900/30 px-2.5 py-1 rounded text-sm whitespace-nowrap">
-            {item.precio}
-          </span>
+          </a>
         </li>
       ))}
     </ul>
