@@ -1,32 +1,57 @@
 ---
-// Importamos el componente de optimización de imágenes nativo de Astro
+import type { ImageMetadata } from 'astro';
 import { Image } from 'astro:assets';
 
-// Recibimos las propiedades de la pizza
-const { id, nombre, ingredientes, imagen } = Astro.props;
-
-// Importamos dinámicamente la imagen correspondiente de la carpeta assets
-const imagenes = import.meta.glob('/src/assets/pizzas/*.{jpeg,jpg,png,gif,webp}');
-const rutaImagen = `/src/assets/pizzas/${imagen}`;
-if (!imagenes[rutaImagen]) {
-  throw new Error(`La imagen "${rutaImagen}" no existe en src/assets/pizzas/`);
+interface Props {
+  id: string;
+  nombre: string;
+  ingredientes: string;
+  imagen: string;
+  precios: {
+    pequeña: number;
+    mediana: number;
+    familiar: number;
+  };
 }
+
+const { id, nombre, ingredientes, imagen, precios } = Astro.props;
+
+const euro = (n: number) =>
+  `${n.toFixed(2).replace('.', ',')}€`;
+
+const tamaños = [
+  { clave: 'Peq.', valor: precios.pequeña },
+  { clave: 'Med.', valor: precios.mediana },
+  { clave: 'Fam.', valor: precios.familiar },
+] as const;
+
+const imagenes = import.meta.glob<{ default: ImageMetadata }>(
+  '/src/assets/pizzas/*.{jpeg,jpg,png,gif,webp}',
+  { eager: true },
+);
+const imagenModulo = imagenes[`/src/assets/pizzas/${imagen}`];
 ---
 
 <div class="bg-zinc-900 border border-zinc-800 rounded-xl overflow-hidden hover:border-red-500 transition duration-300 flex flex-col h-full shadow-lg">
-  {/* Contenedor de la Imagen */}
   <div class="relative aspect-square overflow-hidden bg-black flex items-center justify-center p-4">
     <span class="absolute top-3 left-3 bg-red-600 text-white font-mono text-sm font-bold px-2 py-1 rounded-md z-10">
       {id}
     </span>
-    <Image 
-      src={imagenes[rutaImagen]()} 
-      alt={`Pizza ${nombre}`} 
-      class="object-cover w-full h-full rounded-full transform hover:scale-105 transition duration-500"
-    />
+    {imagenModulo && (
+      <Image
+        src={imagenModulo.default}
+        alt={`Pizza ${nombre}`}
+        width={480}
+        height={480}
+        densities={[1, 2]}
+        quality={70}
+        loading="lazy"
+        decoding="async"
+        class="object-cover w-full h-full rounded-full transform hover:scale-105 transition duration-500"
+      />
+    )}
   </div>
 
-  {/* Contenido de la Tarjeta */}
   <div class="p-5 flex flex-col flex-grow text-left">
     <h3 class="text-xl font-bold text-white uppercase font-mono tracking-wide mb-2">
       {nombre}
@@ -34,5 +59,13 @@ if (!imagenes[rutaImagen]) {
     <p class="text-zinc-400 text-sm flex-grow leading-relaxed">
       {ingredientes}
     </p>
+    <div class="mt-4 grid grid-cols-3 gap-2">
+      {tamaños.map((t) => (
+        <div class="rounded-md border border-zinc-800 bg-black/40 px-1.5 py-2 text-center">
+          <p class="font-mono text-[10px] uppercase tracking-wider text-zinc-500">{t.clave}</p>
+          <p class="font-mono text-sm font-bold text-red-500">{euro(t.valor)}</p>
+        </div>
+      ))}
+    </div>
   </div>
 </div>

@@ -1,13 +1,19 @@
 ---
-// src/pages/imprimir-carta.astro
-import { Image } from "astro:assets";
-import menuData from "../data/menu.json";
+export const prerender = true;
 
-const imagenesPizzas = import.meta.glob(
-  "/src/assets/pizzas/*.{jpeg,jpg,png,gif,webp}",
+import type { ImageMetadata } from 'astro';
+import { Image } from 'astro:assets';
+import '@fontsource/barlow-condensed/latin-700.css';
+import menuData from '../data/menu.json';
+import '../styles/global.css';
+
+const imagenesPizzas = import.meta.glob<{ default: ImageMetadata }>(
+  '/src/assets/pizzas/*.{jpeg,jpg,png,gif,webp}',
+  { eager: true },
 );
-const imagenesCategorias = import.meta.glob(
-  "/src/assets/categorias/*.{jpeg,jpg,png,gif,webp}",
+const imagenesCategorias = import.meta.glob<{ default: ImageMetadata }>(
+  '/src/assets/categorias/*.{jpeg,jpg,png,gif,webp}',
+  { eager: true },
 );
 ---
 
@@ -15,17 +21,15 @@ const imagenesCategorias = import.meta.glob(
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Carta Pizzería Fórmula 1</title>
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
-      @import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Barlow+Condensed:wght@600;700;800&display=swap");
-
       .font-racing {
-        font-family: "Orbitron", sans-serif;
+        font-family: 'Barlow Condensed', ui-sans-serif, sans-serif;
         font-style: italic;
       }
       .font-menu {
-        font-family: "Barlow Condensed", sans-serif;
+        font-family: 'Barlow Condensed', ui-sans-serif, sans-serif;
       }
 
       @page {
@@ -39,11 +43,22 @@ const imagenesCategorias = import.meta.glob(
         width: 297mm;
         height: 210mm;
         max-height: 210mm;
-        padding: 2.2rem 2.5rem;
+        padding: 1.4rem 2rem 1.2rem;
         box-sizing: border-box;
         overflow: hidden;
         display: flex;
         flex-direction: column;
+      }
+
+      .grid-pizzas {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: repeat(6, minmax(0, 1fr));
+        column-gap: 2rem;
+        row-gap: 0.35rem;
+        flex: 1 1 auto;
+        min-height: 0;
+        align-content: stretch;
       }
 
       .pagina-menu:last-child {
@@ -116,51 +131,59 @@ const imagenesCategorias = import.meta.glob(
 
     <!-- ================= PÁGINA 1: EL GRAN PREMIO (PIZZAS COHESIVAS) ================= -->
     <div class="pagina-menu">
-      <div class="text-center border-b-4 border-red-600 pb-2 mb-4">
+      <div class="text-center border-b-4 border-red-600 pb-1.5 mb-3">
         <div class="text-red-500 font-racing text-[10px] tracking-widest uppercase mb-0.5">
           Official Track Menu
         </div>
-        <h1 class="text-4xl font-black tracking-wider text-white uppercase font-racing italic">
+        <h1 class="text-3xl font-black tracking-wider text-white uppercase font-racing italic">
           PIZZERÍA FÓRMULA 1
         </h1>
       </div>
 
-      <div class="text-center mb-5">
-        <h2 class="text-2xl font-bold font-racing text-red-500 text-red-important uppercase tracking-widest italic inline-block bg-zinc-900 bg-box-important border border-zinc-800 px-8 py-1.5 rounded-xl">
+      <div class="text-center mb-3">
+        <h2 class="text-xl font-bold font-racing text-red-500 text-red-important uppercase tracking-widest italic inline-block bg-zinc-900 bg-box-important border border-zinc-800 px-6 py-1 rounded-xl">
           🍕 NUESTRAS PIZZAS (GRAN PREMIO) 🍕
         </h2>
+        <p class="text-zinc-500 font-mono text-[10px] uppercase tracking-widest mt-1.5">
+          Precios: Pequeña / Mediana / Familiar
+        </p>
       </div>
 
-      {/* Cuadrícula compacta de las 11 pizzas en una sola hoja */}
-      <div class="grid grid-cols-2 gap-x-10 gap-y-3 px-2 flex-grow overflow-hidden">
+      <div class="grid-pizzas px-2">
         {
           menuData.pizzas.map((pizza) => {
-            const ruta = `/src/assets/pizzas/${pizza.imagen}`;
+            const pizzaImg = imagenesPizzas[`/src/assets/pizzas/${pizza.imagen}`];
             return (
-              <div class="flex items-center gap-4 border-b border-zinc-900 pb-1.5 bloque-reactivo">
-                {imagenesPizzas[ruta] && (
-                  <div class="w-12 h-12 rounded-xl overflow-hidden border border-red-600/30 flex-shrink-0 bg-zinc-900">
+              <div class="flex items-center gap-3 border-b border-zinc-900 pb-1 min-h-0">
+                {pizzaImg && (
+                  <div class="w-10 h-10 rounded-lg overflow-hidden border border-red-600/30 flex-shrink-0 bg-zinc-900">
                     <Image
-                      src={imagenesPizzas[ruta]()}
+                      src={pizzaImg.default}
                       alt={pizza.nombre}
+                      width={40}
+                      height={40}
+                      densities={[2]}
+                      quality={60}
+                      loading="eager"
+                      decoding="async"
                       class="w-full h-full object-cover"
                     />
                   </div>
                 )}
                 <div class="flex-grow min-w-0">
                   <div class="flex justify-between items-end w-full">
-                    <h3 class="text-xl font-bold text-white uppercase tracking-wide truncate">
+                    <h3 class="text-lg font-bold text-white uppercase tracking-wide truncate">
                       <span class="text-red-500 text-red-important font-mono mr-1">
                         {pizza.id}.
                       </span>{" "}
                       {pizza.nombre}
                     </h3>
                     <div class="linea-puntos" />
-                    <span class="text-red-500 text-red-important font-mono font-bold text-lg whitespace-nowrap">
-                      7,50€
+                    <span class="text-red-500 text-red-important font-mono font-bold text-xs whitespace-nowrap">
+                      {pizza.precios.pequeña.toFixed(2).replace('.', ',')} / {pizza.precios.mediana.toFixed(2).replace('.', ',')} / {pizza.precios.familiar.toFixed(2).replace('.', ',')}€
                     </span>
                   </div>
-                  <p class="text-zinc-400 text-zinc-important text-sm italic font-sans leading-tight pr-2 truncate">
+                  <p class="text-zinc-400 text-zinc-important text-xs italic font-sans leading-tight pr-2 truncate">
                     {pizza.ingredientes}
                   </p>
                 </div>
@@ -185,15 +208,21 @@ const imagenesCategorias = import.meta.glob(
       <div class="columns-3 gap-5 flex-grow overflow-hidden px-2">
         {
           menuData.otrasCategorias.map((cat) => {
-            const rutaCat = `/src/assets/categorias/${cat.imagen}`;
+            const catImg = imagenesCategorias[`/src/assets/categorias/${cat.imagen}`];
             return (
               <div class="bloque-reactivo mb-4 border border-zinc-800 bg-box-important p-4 rounded-xl bg-zinc-900/40">
                 <div class="flex items-center gap-2 border-b-2 border-red-600 pb-2 mb-3">
-                  {imagenesCategorias[rutaCat] && (
+                  {catImg && (
                     <div class="w-7 h-7 rounded-lg overflow-hidden border border-zinc-700 flex-shrink-0">
                       <Image
-                        src={imagenesCategorias[rutaCat]()}
+                        src={catImg.default}
                         alt={cat.categoria}
+                        width={28}
+                        height={28}
+                        densities={[2]}
+                        quality={60}
+                        loading="lazy"
+                        decoding="async"
                         class="w-full h-full object-cover"
                       />
                     </div>

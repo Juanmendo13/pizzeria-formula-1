@@ -1,0 +1,13 @@
+---
+export const prerender = false;
+
+import Layout from '../layouts/Layout.astro';
+import { AuthenticateWithRedirectCallback } from '@clerk/astro/components';
+---
+
+<Layout title="Conectando cuenta | Pizzería Fórmula 1">
+  <main class="min-h-screen bg-black flex items-center justify-center text-zinc-400 font-mono text-sm">
+    <AuthenticateWithRedirectCallback />
+    <p>Conectando tu cuenta…</p>
+  </main>
+</Layout>

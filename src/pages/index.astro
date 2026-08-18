@@ -1,5 +1,7 @@
 ---
-// src/pages/index.astro
+export const prerender = false;
+
+import { Image } from 'astro:assets';
 import Layout from '../layouts/Layout.astro';
 import Navbar from '../components/Navbar.astro';
 import Ticker from '../components/Ticker.astro';
@@ -7,6 +9,7 @@ import PizzaCard from '../components/PizzaCard.astro';
 import MenuSection from '../components/MenuSection.astro';
 import Footer from '../components/Footer.astro';
 import menu from '../data/menu.json';
+import nosotrosBoxes from '../assets/nosotros-boxes.jpg';
 ---
 
 <Layout title="Pizzería Fórmula 1 | Carta">
@@ -73,9 +76,15 @@ import menu from '../data/menu.json';
         {/* Espacio para imagen del local o equipo */}
         <div class="relative group rounded-2xl overflow-hidden border border-zinc-800 bg-zinc-900/50 p-2">
           <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent z-10"></div>
-          <img 
-            src="/images/nosotros-boxes.jpg" 
-            alt="Nuestros maestros pizzeros en boxes" 
+          <Image
+            src={nosotrosBoxes}
+            alt="Nuestros maestros pizzeros en boxes"
+            width={800}
+            widths={[480, 800, 1200]}
+            sizes="(min-width: 768px) 420px, 100vw"
+            quality={65}
+            loading="lazy"
+            decoding="async"
             class="w-full h-80 object-cover rounded-xl grayscale group-hover:grayscale-0 transition duration-500"
           />
           <div class="absolute bottom-6 left-6 z-20 font-mono">
@@ -108,6 +117,7 @@ import menu from '../data/menu.json';
             nombre={pizza.nombre}
             ingredientes={pizza.ingredientes}
             imagen={pizza.imagen}
+            precios={pizza.precios}
           />
         ))}
       </div>
@@ -135,8 +145,8 @@ import menu from '../data/menu.json';
     {/* 6. Zona de Descarga de PDF */}
     <div class="flex flex-col sm:flex-row justify-center items-center gap-4 pb-20 px-4 print:hidden">
       <a 
-        href="/carta-formula1.pdf" 
-        download
+        href="/categorias/carta-formula1.pdf" 
+        download="carta-formula1.pdf"
         class="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-6 py-3 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 hover:border-red-600 text-zinc-300 hover:text-white font-mono text-sm font-bold uppercase rounded-lg transition duration-300 shadow-md group"
       >
         <span class="transform group-hover:scale-110 transition">📥</span> Descargar Menú PDF

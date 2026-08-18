@@ -6,6 +6,7 @@ interface Item {
   nombre: string;
   descripcion?: string;
   precio: string;
+  nuevo?: boolean;
 }
 
 interface Props {
@@ -40,7 +41,12 @@ const { categoria, imagen, items, nota } = Astro.props;
       {items.map((item) => (
         <li class="flex justify-between items-start py-4 gap-6">
           <div class="flex flex-col gap-1">
-            <span class="text-zinc-100 font-bold text-base">{item.nombre}</span>
+            <span class="text-zinc-100 font-bold text-base inline-flex items-center gap-2 flex-wrap">
+              {item.nombre}
+              {item.nuevo && (
+                <span class="font-mono text-[10px] uppercase tracking-wider bg-red-600 text-white px-1.5 py-0.5 rounded">New</span>
+              )}
+            </span>
             {item.descripcion && (
               <p class="text-zinc-500 text-sm leading-relaxed">{item.descripcion}</p>
             )}

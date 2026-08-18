@@ -1,0 +1,51 @@
+---
+export const prerender = false;
+
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Cerrar sesión | Pizzería Fórmula 1">
+  <main class="min-h-screen bg-black flex items-center justify-center px-4">
+    <p class="font-mono text-sm text-zinc-400">Cerrando sesión…</p>
+  </main>
+</Layout>
+
+<script>
+  type ClerkBrowser = {
+    loaded?: boolean;
+    load?: () => Promise<unknown>;
+    signOut?: (options?: { redirectUrl?: string }) => Promise<unknown>;
+  };
+
+  function clerkClient(): ClerkBrowser | undefined {
+    return (window as Window & { Clerk?: ClerkBrowser }).Clerk;
+  }
+
+  function clearLocalhostCookies() {
+    const cookies = document.cookie.split(';');
+    for (const raw of cookies) {
+      const name = raw.split('=')[0]?.trim();
+      if (!name) continue;
+      document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`;
+      document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; domain=localhost`;
+    }
+  }
+
+  async function signOutAndLeave() {
+    const started = Date.now();
+    while (!clerkClient() && Date.now() - started < 4000) {
+      await new Promise((r) => setTimeout(r, 50));
+    }
+    const clerk = clerkClient();
+    try {
+      if (clerk && !clerk.loaded) await clerk.load?.();
+      await clerk?.signOut?.({ redirectUrl: '/' });
+    } catch {
+      // Si Clerk no carga, igual limpiamos cookies locales.
+    }
+    clearLocalhostCookies();
+    window.location.replace('/');
+  }
+
+  void signOutAndLeave();
+</script>

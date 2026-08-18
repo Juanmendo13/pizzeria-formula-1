@@ -1,0 +1,13 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navbar from './Navbar.astro';
+import { SignIn } from '@clerk/astro/components';
+import { clerkAppearance } from '../lib/clerk-appearance';
+---
+
+<Layout title="Entrar | Pizzería Fórmula 1">
+  <Navbar />
+  <main class="min-h-screen bg-black pt-28 pb-16 px-4 flex justify-center">
+    <SignIn path="/sign-in" routing="path" appearance={clerkAppearance} />
+  </main>
+</Layout>

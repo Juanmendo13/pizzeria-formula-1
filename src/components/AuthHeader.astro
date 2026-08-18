@@ -1,0 +1,44 @@
+---
+import { SignOutButton } from '@clerk/astro/components';
+
+const secondary =
+  'inline-flex items-center px-3 py-2 bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 hover:border-red-600 text-white font-mono text-xs font-bold uppercase rounded-lg transition';
+const primary =
+  'inline-flex items-center px-3 py-2 bg-red-600 hover:bg-red-700 text-white font-mono text-xs font-bold uppercase rounded-lg transition';
+
+let signedIn = false;
+let label = 'Cuenta';
+
+try {
+  const auth = Astro.locals.auth ? await Promise.resolve(Astro.locals.auth()) : undefined;
+  signedIn = Boolean(auth?.userId);
+  if (signedIn && Astro.locals.currentUser) {
+    const user = await Astro.locals.currentUser();
+    label =
+      user?.primaryEmailAddress?.emailAddress ??
+      user?.emailAddresses?.[0]?.emailAddress ??
+      user?.fullName ??
+      'Cuenta';
+  }
+} catch {
+  signedIn = false;
+}
+---
+
+<div class="flex items-center gap-2 shrink-0">
+  {signedIn ? (
+    <div class="flex items-center gap-2">
+      <span class="hidden sm:inline font-mono text-xs text-zinc-300 max-w-[12rem] truncate" title={label}>
+        {label}
+      </span>
+      <SignOutButton redirectUrl="/" class={secondary}>
+        Salir
+      </SignOutButton>
+    </div>
+  ) : (
+    <div class="flex items-center gap-2">
+      <a href="/sign-in" class={secondary}>Entrar</a>
+      <a href="/sign-up" class={primary}>Registro</a>
+    </div>
+  )}
+</div>

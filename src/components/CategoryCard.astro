@@ -1,8 +1,6 @@
 ---
-// src/components/CategoryCard.astro
+import type { ImageMetadata } from 'astro';
 import { Image } from 'astro:assets';
-
-// Importamos el logo de Astro como fallback seguro
 import imagenPlaceholder from '/src/assets/astro.svg';
 
 interface Props {
@@ -12,19 +10,25 @@ interface Props {
 
 const { categoria, imagen } = Astro.props;
 
-// Importamos dinámicamente las imágenes de la carpeta de categorías
-const imagenes = import.meta.glob('/src/assets/categorias/*.{jpeg,jpg,png,gif,webp}');
+const imagenes = import.meta.glob<{ default: ImageMetadata }>(
+  '/src/assets/categorias/*.{jpeg,jpg,png,gif,webp}',
+  { eager: true },
+);
 const rutaImagen = `/src/assets/categorias/${imagen}`;
-
-// Comprobamos si el archivo existe físicamente en los assets
-const usarImagenDinamica = imagen && imagenes[rutaImagen];
+const imagenModulo = imagen && imagenes[rutaImagen];
 ---
 
 <div class="flex items-center gap-4">
   <div class="relative w-12 h-12 flex-shrink-0 bg-zinc-900 rounded-full overflow-hidden border-2 border-zinc-800 group-open:border-red-600 transition duration-200 flex items-center justify-center p-0.5">
-    <Image 
-      src={usarImagenDinamica ? imagenes[rutaImagen]() : imagenPlaceholder} 
-      alt={`Categoría ${categoria}`} 
+    <Image
+      src={imagenModulo ? imagenModulo.default : imagenPlaceholder}
+      alt={`Categoría ${categoria}`}
+      width={48}
+      height={48}
+      densities={[2]}
+      quality={60}
+      loading="lazy"
+      decoding="async"
       class="object-cover w-full h-full rounded-full transition duration-300 group-hover:scale-105"
     />
   </div>
