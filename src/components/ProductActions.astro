@@ -20,7 +20,16 @@ const sizes = isPizza && precios
   : [];
 ---
 
-<div class="space-y-6" data-product-actions>
+<div
+  class="space-y-6"
+  data-product-actions
+  data-slug={slug}
+  data-nombre={nombre}
+  data-signed-in={signedIn ? 'true' : 'false'}
+  data-is-pizza={isPizza ? 'true' : 'false'}
+  data-precio={precioNumero ?? ''}
+  data-imagen={imagen ?? ''}
+>
   {
     isPizza && sizes.length > 0 && (
       <div>
@@ -36,7 +45,7 @@ const sizes = isPizza && precios
                 class="peer sr-only"
                 data-size={size.key}
                 data-size-label={size.label}
-                data-price={size.price}
+                data-price={String(size.price)}
               />
               <div class="rounded-lg border border-zinc-800 bg-zinc-950 px-3 py-3 text-center transition peer-checked:border-red-600 peer-checked:bg-red-950/30 hover:border-zinc-600">
                 <p class="font-mono text-[10px] uppercase tracking-wider text-zinc-500">{size.label}</p>
@@ -71,67 +80,90 @@ const sizes = isPizza && precios
   <p class="text-sm text-zinc-500 font-mono hidden" data-cart-feedback></p>
 </div>
 
-<script define:vars={{ slug, nombre, signedIn, isPizza, precioNumero, imagen }}>
-  const root = document.querySelector('[data-product-actions]');
-  const addBtn = root?.querySelector('[data-add-to-cart]');
-  const feedback = root?.querySelector('[data-cart-feedback]');
+<script>
+  import { addToCart, cartLineKey } from '../lib/cart.ts';
+  import type { PizzaSize } from '../lib/menu.ts';
 
-  function getSelectedSize() {
-    const selected = root?.querySelector('input[name="pizza-size"]:checked');
-    if (!selected) return null;
-    return {
-      size: selected.getAttribute('data-size'),
-      sizeLabel: selected.getAttribute('data-size-label'),
-      price: Number(selected.getAttribute('data-price')),
-    };
-  }
-
-  function showFeedback(message, ok = true) {
-    if (!feedback) return;
+  function showFeedback(root: HTMLElement, message: string, ok = true) {
+    const feedback = root.querySelector('[data-cart-feedback]');
+    if (!(feedback instanceof HTMLElement)) return;
     feedback.textContent = message;
     feedback.classList.remove('hidden', 'text-red-400', 'text-green-400');
     feedback.classList.add(ok ? 'text-green-400' : 'text-red-400');
   }
 
-  addBtn?.addEventListener('click', async () => {
-    const returnUrl = encodeURIComponent(window.location.pathname);
+  function selectedSize(root: HTMLElement) {
+    const selected = root.querySelector('input[name="pizza-size"]:checked');
+    if (!(selected instanceof HTMLInputElement)) return null;
+    return {
+      size: selected.dataset.size as PizzaSize | undefined,
+      sizeLabel: selected.dataset.sizeLabel,
+      price: Number(selected.dataset.price),
+    };
+  }
 
-    if (!signedIn) {
-      window.location.href = `/sign-in?redirect_url=${returnUrl}`;
-      return;
-    }
+  function bindActions(root: HTMLElement) {
+    if (root.dataset.bound === 'true') return;
+    root.dataset.bound = 'true';
 
-    const { addToCart, cartLineKey } = await import('../lib/cart.ts');
+    const addBtn = root.querySelector('[data-add-to-cart]');
+    addBtn?.addEventListener('click', () => {
+      const signedIn = root.dataset.signedIn === 'true';
+      const slug = root.dataset.slug ?? '';
+      const nombre = root.dataset.nombre ?? '';
+      const isPizza = root.dataset.isPizza === 'true';
+      const imagen = root.dataset.imagen || undefined;
+      const precioRaw = root.dataset.precio;
+      const returnUrl = encodeURIComponent(window.location.pathname);
 
-    if (isPizza) {
-      const selected = getSelectedSize();
-      if (!selected?.size) {
-        showFeedback('Elige un tamaño antes de añadir.', false);
+      if (!signedIn) {
+        window.location.href = `/sign-in?redirect_url=${returnUrl}`;
+        return;
+      }
+
+      if (!slug || !nombre) {
+        showFeedback(root, 'No se pudo añadir este producto.', false);
+        return;
+      }
+
+      if (isPizza) {
+        const selected = selectedSize(root);
+        if (!selected?.size || Number.isNaN(selected.price)) {
+          showFeedback(root, 'Elige un tamaño antes de añadir.', false);
+          return;
+        }
+
+        addToCart({
+          key: cartLineKey(slug, selected.size),
+          slug,
+          nombre,
+          size: selected.size,
+          sizeLabel: selected.sizeLabel,
+          precio: selected.price,
+          imagen,
+        });
+        showFeedback(root, `Añadida (${selected.sizeLabel}) al carrito.`);
+        return;
+      }
+
+      const precioNumero = precioRaw === '' ? NaN : Number(precioRaw);
+      if (Number.isNaN(precioNumero)) {
+        showFeedback(root, 'Este producto no tiene precio.', false);
         return;
       }
 
       addToCart({
-        key: cartLineKey(slug, selected.size),
+        key: cartLineKey(slug),
         slug,
         nombre,
-        size: selected.size,
-        sizeLabel: selected.sizeLabel,
-        precio: selected.price,
+        precio: precioNumero,
         imagen,
       });
-      showFeedback(`Añadida (${selected.sizeLabel}) al carrito.`);
-      return;
-    }
-
-    if (precioNumero === undefined) return;
-
-    addToCart({
-      key: cartLineKey(slug),
-      slug,
-      nombre,
-      precio: precioNumero,
-      imagen,
+      showFeedback(root, 'Añadido al carrito.');
     });
-    showFeedback('Añadido al carrito.');
+  }
+
+  document.querySelectorAll('[data-product-actions]').forEach((el) => {
+    if (el instanceof HTMLElement) bindActions(el);
   });
 </script>
