@@ -26,6 +26,11 @@ if (!signedIn) {
 
 const inputClass =
   'w-full rounded-lg border border-zinc-800 bg-zinc-950 px-4 py-3 text-white font-sans text-sm focus:border-red-600 focus:outline-none';
+
+const web3Key =
+  process.env.WEB3FORMS_ACCESS_KEY ||
+  (import.meta.env.WEB3FORMS_ACCESS_KEY as string | undefined) ||
+  '';
 ---
 
 <Layout title="Carrito | Pizzería Fórmula 1">
@@ -78,7 +83,7 @@ const inputClass =
           </button>
         </div>
 
-        <form class="rounded-xl border border-zinc-800 bg-zinc-950 p-6 space-y-5" data-order-form>
+        <form class="rounded-xl border border-zinc-800 bg-zinc-950 p-6 space-y-5" data-order-form data-web3-key={web3Key}>
           <h2 class="font-mono text-lg font-black uppercase tracking-tight">Datos del pedido</h2>
 
           <label class="block space-y-2">
@@ -292,10 +297,47 @@ const inputClass =
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
-      const result = (await response.json()) as { error?: string; mailto?: string };
+      const result = (await response.json()) as {
+        error?: string;
+        mailto?: string;
+        envio?: {
+          subject: string;
+          from_name: string;
+          email: string;
+          message: string;
+        };
+      };
 
-      if (!response.ok) {
-        showError(result.error || 'No se pudo enviar el pedido.', result.mailto);
+      if (!response.ok || !result.envio) {
+        showError(result.error || 'No se pudo preparar el pedido.', result.mailto);
+        return;
+      }
+
+      const accessKey = form.dataset.web3Key;
+      if (!accessKey) {
+        showError('Falta la clave de Web3Forms en el servidor.', result.mailto);
+        return;
+      }
+
+      const web3 = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({
+          access_key: accessKey,
+          subject: result.envio.subject,
+          from_name: result.envio.from_name,
+          name: result.envio.from_name,
+          email: result.envio.email,
+          message: result.envio.message,
+        }),
+      });
+      const web3Result = (await web3.json().catch(() => ({}))) as {
+        success?: boolean;
+        message?: string;
+      };
+
+      if (!web3.ok || !web3Result.success) {
+        showError(web3Result.message || 'Web3Forms no pudo enviar el pedido.', result.mailto);
         return;
       }
 
