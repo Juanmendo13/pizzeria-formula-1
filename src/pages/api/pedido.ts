@@ -2,31 +2,13 @@ export const prerender = false;
 
 import type { APIRoute } from 'astro';
 import { formatEuro } from '../../lib/menu';
-import {
-  parsePedidoBody,
-  pedidoHtml,
-  pedidoMailto,
-  pedidoTexto,
-  resolverPedido,
-} from '../../lib/pedido';
+import { parsePedidoBody, pedidoMailto, pedidoTexto, resolverPedido } from '../../lib/pedido';
 
 function env(name: string): string | undefined {
   const fromProcess = process.env[name];
   if (fromProcess) return fromProcess;
   const fromMeta = (import.meta.env as Record<string, string | undefined>)[name];
   return fromMeta;
-}
-
-function leerErrorResend(payload: unknown): string {
-  if (!payload || typeof payload !== 'object') return '';
-  const data = payload as Record<string, unknown>;
-  if (typeof data.message === 'string') return data.message;
-  if (typeof data.error === 'string') return data.error;
-  if (data.error && typeof data.error === 'object') {
-    const nested = data.error as Record<string, unknown>;
-    if (typeof nested.message === 'string') return nested.message;
-  }
-  return '';
 }
 
 export const POST: APIRoute = async ({ request, locals }) => {
@@ -52,12 +34,11 @@ export const POST: APIRoute = async ({ request, locals }) => {
   }
 
   const pedidosEmail = env('PEDIDOS_EMAIL');
-  const resendKey = env('RESEND_API_KEY');
   const web3Key = env('WEB3FORMS_ACCESS_KEY');
 
   if (!pedidosEmail) {
     return Response.json(
-      { error: 'El envío de pedidos no está configurado todavía.' },
+      { error: 'Falta PEDIDOS_EMAIL. El destino debe ser pizzeriaformula1@outlook.es.' },
       { status: 503 },
     );
   }
@@ -80,67 +61,44 @@ export const POST: APIRoute = async ({ request, locals }) => {
   }
 
   const subject = `Nuevo pedido · ${pedido.nombre} · ${formatEuro(pedido.total)}`;
-  const html = pedidoHtml(pedido, clienteEmail);
   const text = pedidoTexto(pedido, clienteEmail);
   const mailto = pedidoMailto(pedidosEmail, pedido, clienteEmail);
 
+  if (!web3Key) {
+    return Response.json(
+      {
+        error:
+          'Falta la clave de Web3Forms. Entra en https://web3forms.com, pon pizzeriaformula1@outlook.es, copia el Access Key y pégalo en el chat.',
+        mailto,
+      },
+      { status: 503 },
+    );
+  }
+
   try {
-    if (web3Key) {
-      const web3 = await fetch('https://api.web3forms.com/submit', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify({
-          access_key: web3Key,
-          subject,
-          from_name: pedido.nombre,
-          email: clienteEmail || pedidosEmail,
-          message: text,
-        }),
-      });
-      const web3Payload = (await web3.json().catch(() => ({}))) as {
-        success?: boolean;
-        message?: string;
-      };
-      if (web3.ok && web3Payload.success) {
-        return Response.json({ ok: true, total: pedido.total });
-      }
-    }
+    const web3 = await fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      body: JSON.stringify({
+        access_key: web3Key,
+        subject,
+        from_name: pedido.nombre,
+        email: clienteEmail || pedidosEmail,
+        message: text,
+      }),
+    });
+    const web3Payload = (await web3.json().catch(() => ({}))) as {
+      success?: boolean;
+      message?: string;
+    };
 
-    if (resendKey) {
-      const resend = await fetch('https://api.resend.com/emails', {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${resendKey}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          from: 'beth.t@example.com',
-          to: [pedidosEmail],
-          subject,
-          html,
-          text,
-        }),
-      });
-      const resendPayload = await resend.json().catch(() => ({}));
-      if (resend.ok) {
-        return Response.json({ ok: true, total: pedido.total });
-      }
-
-      const detail = leerErrorResend(resendPayload);
-      return Response.json(
-        {
-          error:
-            detail ||
-            'Resend no pudo enviar. Usa el botón de correo o configura Web3Forms.',
-          mailto,
-        },
-        { status: 502 },
-      );
+    if (web3.ok && web3Payload.success) {
+      return Response.json({ ok: true, total: pedido.total });
     }
 
     return Response.json(
       {
-        error: 'No hay servicio de correo configurado. Envía el pedido con tu aplicación de correo.',
+        error: web3Payload.message || 'Web3Forms no pudo enviar el pedido.',
         mailto,
       },
       { status: 502 },
@@ -148,7 +106,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
   } catch {
     return Response.json(
       {
-        error: 'No se pudo conectar con el correo. Envía el pedido con tu aplicación de correo.',
+        error: 'No se pudo conectar con Web3Forms.',
         mailto,
       },
       { status: 502 },
