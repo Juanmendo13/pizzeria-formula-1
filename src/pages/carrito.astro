@@ -7,10 +7,15 @@ import Footer from '../components/Footer.astro';
 import { formatEuro } from '../lib/menu.ts';
 
 let signedIn = false;
+let defaultNombre = '';
 
 try {
   const auth = Astro.locals.auth ? await Promise.resolve(Astro.locals.auth()) : undefined;
   signedIn = Boolean(auth?.userId);
+  if (signedIn && Astro.locals.currentUser) {
+    const user = await Astro.locals.currentUser();
+    defaultNombre = user?.fullName ?? user?.firstName ?? '';
+  }
 } catch {
   signedIn = false;
 }
@@ -18,6 +23,9 @@ try {
 if (!signedIn) {
   return Astro.redirect('/sign-in?redirect_url=%2Fcarrito');
 }
+
+const inputClass =
+  'w-full rounded-lg border border-zinc-800 bg-zinc-950 px-4 py-3 text-white font-sans text-sm focus:border-red-600 focus:outline-none';
 ---
 
 <Layout title="Carrito | Pizzería Fórmula 1">
@@ -28,7 +36,7 @@ if (!signedIn) {
       <h1 class="text-3xl md:text-4xl font-black font-mono uppercase tracking-tight mb-2">
         Tu carrito
       </h1>
-      <p class="text-zinc-500 font-mono text-sm mb-10">Revisa cantidades antes de confirmar el pedido.</p>
+      <p class="text-zinc-500 font-mono text-sm mb-10">Revisa cantidades y envía el pedido a la pizzería.</p>
 
       <div data-cart-empty class="hidden rounded-xl border border-zinc-800 bg-zinc-950 p-8 text-center">
         <p class="text-zinc-400 mb-6">El carrito está vacío.</p>
@@ -40,30 +48,81 @@ if (!signedIn) {
         </a>
       </div>
 
-      <div data-cart-content class="hidden space-y-4">
+      <div data-order-success class="hidden rounded-xl border border-green-900/50 bg-zinc-950 p-8 text-center">
+        <p class="text-green-400 font-mono font-bold uppercase mb-3">Pedido enviado</p>
+        <p class="text-zinc-400 mb-6">
+          Ha llegado un correo a la pizzería. Te llamarán al teléfono que indicaste si hace falta confirmar.
+        </p>
+        <a
+          href="/#carta"
+          class="inline-flex px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-mono text-sm font-bold uppercase rounded-lg transition"
+        >
+          Seguir pidiendo
+        </a>
+      </div>
+
+      <div data-cart-content class="hidden space-y-8">
         <ul class="divide-y divide-zinc-900 border border-zinc-800 rounded-xl overflow-hidden bg-zinc-950" data-cart-lines></ul>
 
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pt-4 border-t border-zinc-800">
+        <div class="flex items-center justify-between gap-4 pt-2">
           <div>
             <p class="font-mono text-xs uppercase tracking-wider text-zinc-500">Total</p>
             <p class="font-mono text-3xl font-bold text-red-500" data-cart-total>0,00€</p>
           </div>
-          <div class="flex flex-wrap gap-3">
-            <button
-              type="button"
-              class="px-5 py-3 bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-white font-mono text-xs font-bold uppercase rounded-lg transition"
-              data-clear-cart
-            >
-              Vaciar
-            </button>
-            <a
-              href="/#contacto"
-              class="px-5 py-3 bg-red-600 hover:bg-red-700 text-white font-mono text-xs font-bold uppercase rounded-lg transition"
-            >
-              Confirmar pedido
-            </a>
-          </div>
+          <button
+            type="button"
+            class="px-5 py-3 bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-white font-mono text-xs font-bold uppercase rounded-lg transition"
+            data-clear-cart
+          >
+            Vaciar
+          </button>
         </div>
+
+        <form class="rounded-xl border border-zinc-800 bg-zinc-950 p-6 space-y-5" data-order-form>
+          <h2 class="font-mono text-lg font-black uppercase tracking-tight">Datos del pedido</h2>
+
+          <label class="block space-y-2">
+            <span class="font-mono text-xs uppercase tracking-wider text-zinc-500">Nombre</span>
+            <input class={inputClass} type="text" name="nombre" required maxlength="80" value={defaultNombre} />
+          </label>
+
+          <label class="block space-y-2">
+            <span class="font-mono text-xs uppercase tracking-wider text-zinc-500">Teléfono</span>
+            <input class={inputClass} type="tel" name="telefono" required maxlength="20" placeholder="954 74 03 96" />
+          </label>
+
+          <fieldset class="space-y-3">
+            <legend class="font-mono text-xs uppercase tracking-wider text-zinc-500 mb-2">Tipo</legend>
+            <label class="flex items-center gap-3 cursor-pointer">
+              <input type="radio" name="tipo" value="recogida" checked class="accent-red-600" />
+              <span>Recogida en local</span>
+            </label>
+            <label class="flex items-center gap-3 cursor-pointer">
+              <input type="radio" name="tipo" value="reparto" class="accent-red-600" />
+              <span>Reparto a domicilio</span>
+            </label>
+          </fieldset>
+
+          <label class="block space-y-2 hidden" data-address-field>
+            <span class="font-mono text-xs uppercase tracking-wider text-zinc-500">Dirección de entrega</span>
+            <input class={inputClass} type="text" name="direccion" maxlength="200" />
+          </label>
+
+          <label class="block space-y-2">
+            <span class="font-mono text-xs uppercase tracking-wider text-zinc-500">Notas (opcional)</span>
+            <textarea class={`${inputClass} min-h-24`} name="notas" maxlength="400" placeholder="Sin cebolla, portero, etc."></textarea>
+          </label>
+
+          <p class="text-sm font-mono hidden" data-order-error></p>
+
+          <button
+            type="submit"
+            class="w-full sm:w-auto px-8 py-4 bg-red-600 hover:bg-red-700 disabled:opacity-60 text-white font-mono font-bold uppercase rounded-lg transition"
+            data-submit-order
+          >
+            Enviar pedido
+          </button>
+        </form>
       </div>
     </div>
   </main>
@@ -82,15 +141,36 @@ if (!signedIn) {
 
   const emptyEl = document.querySelector('[data-cart-empty]');
   const contentEl = document.querySelector('[data-cart-content]');
+  const successEl = document.querySelector('[data-order-success]');
   const linesEl = document.querySelector('[data-cart-lines]');
   const totalEl = document.querySelector('[data-cart-total]');
   const clearBtn = document.querySelector('[data-clear-cart]');
+  const form = document.querySelector('[data-order-form]');
+  const addressField = document.querySelector('[data-address-field]');
+  const errorEl = document.querySelector('[data-order-error]');
+  const submitBtn = document.querySelector('[data-submit-order]');
+
+  function escapeHtml(value: string): string {
+    return value
+      .replaceAll('&', '&amp;')
+      .replaceAll('<', '&lt;')
+      .replaceAll('>', '&gt;')
+      .replaceAll('"', '&quot;');
+  }
+
+  function showError(message: string) {
+    if (!(errorEl instanceof HTMLElement)) return;
+    errorEl.textContent = message;
+    errorEl.classList.remove('hidden', 'text-green-400');
+    errorEl.classList.add('text-red-400');
+  }
 
   function renderCart() {
     const cart = getCart();
     const isEmpty = cart.length === 0;
+    const successVisible = successEl && !successEl.classList.contains('hidden');
 
-    emptyEl?.classList.toggle('hidden', !isEmpty);
+    emptyEl?.classList.toggle('hidden', !isEmpty || Boolean(successVisible));
     contentEl?.classList.toggle('hidden', isEmpty);
 
     if (!linesEl || isEmpty) return;
@@ -98,12 +178,12 @@ if (!signedIn) {
     linesEl.innerHTML = cart
       .map(
         (line) => `
-        <li class="p-4 flex flex-col sm:flex-row sm:items-center gap-4" data-line-key="${line.key}">
+        <li class="p-4 flex flex-col sm:flex-row sm:items-center gap-4" data-line-key="${escapeHtml(line.key)}">
           <div class="flex-grow min-w-0">
-            <p class="font-mono font-bold text-white uppercase truncate">${line.nombre}</p>
+            <p class="font-mono font-bold text-white uppercase truncate">${escapeHtml(line.nombre)}</p>
             ${
               line.sizeLabel
-                ? `<p class="text-xs text-zinc-500 font-mono mt-1">Tamaño: ${line.sizeLabel}</p>`
+                ? `<p class="text-xs text-zinc-500 font-mono mt-1">Tamaño: ${escapeHtml(line.sizeLabel)}</p>`
                 : ''
             }
             <p class="text-sm text-red-500 font-mono mt-1">${formatEuro(line.precio)} / ud.</p>
@@ -143,9 +223,78 @@ if (!signedIn) {
     });
   }
 
+  form?.querySelectorAll('input[name="tipo"]').forEach((input) => {
+    input.addEventListener('change', () => {
+      const tipo = form instanceof HTMLFormElement
+        ? new FormData(form).get('tipo')
+        : 'recogida';
+      addressField?.classList.toggle('hidden', tipo !== 'reparto');
+      const direccion = form?.querySelector('input[name="direccion"]');
+      if (direccion instanceof HTMLInputElement) {
+        direccion.required = tipo === 'reparto';
+      }
+    });
+  });
+
   clearBtn?.addEventListener('click', () => {
     clearCart();
     renderCart();
+  });
+
+  form?.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    if (!(form instanceof HTMLFormElement)) return;
+
+    const cart = getCart();
+    if (cart.length === 0) {
+      showError('El carrito está vacío.');
+      return;
+    }
+
+    const data = new FormData(form);
+    const payload = {
+      nombre: String(data.get('nombre') ?? ''),
+      telefono: String(data.get('telefono') ?? ''),
+      tipo: String(data.get('tipo') ?? ''),
+      direccion: String(data.get('direccion') ?? ''),
+      notas: String(data.get('notas') ?? ''),
+      lineas: cart.map((line) => ({
+        slug: line.slug,
+        size: line.size,
+        quantity: line.quantity,
+      })),
+    };
+
+    if (submitBtn instanceof HTMLButtonElement) {
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Enviando...';
+    }
+
+    try {
+      const response = await fetch('/api/pedido', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      const result = (await response.json()) as { error?: string };
+
+      if (!response.ok) {
+        showError(result.error || 'No se pudo enviar el pedido.');
+        return;
+      }
+
+      clearCart();
+      contentEl?.classList.add('hidden');
+      emptyEl?.classList.add('hidden');
+      successEl?.classList.remove('hidden');
+    } catch {
+      showError('No se pudo enviar el pedido. Revisa la conexión.');
+    } finally {
+      if (submitBtn instanceof HTMLButtonElement) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Enviar pedido';
+      }
+    }
   });
 
   renderCart();

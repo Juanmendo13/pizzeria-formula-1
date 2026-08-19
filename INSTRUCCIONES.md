@@ -37,3 +37,4 @@ Cómo usarlo:
 - Texana (id 10) incluida al imprimir carta: pizzas repartidas en dos páginas en `/imprimir-carta`.
 - Ficha de producto (`/producto/[slug]`): ingredientes, precios y tamaños al clicar cualquier producto.
 - Carrito de compra: añadir productos, cantidades, resumen en `/carrito`, icono con contador en el header solo con sesión iniciada. Sin sesión, «Añadir al carrito» redirige a login/registro.
+- Enviar pedidos del carrito por correo a `pizzeriaformula1@outlook.es` (formulario de nombre, teléfono, recogida/reparto). API key de Resend guardada en `.env.local`.
