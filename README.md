@@ -1,46 +1,66 @@
-# Astro Starter Kit: Basics
+# Pizzería Fórmula 1 — Portfolio web
 
-```sh
-pnpm create astro@latest -- --template basics
+Demo en vivo: **https://pizzeria-formula-1.vercel.app**
+
+Web moderna para un negocio local de hostelería (Tocina, Sevilla). Proyecto real desplegado en Vercel, usable como **portfolio** para mostrar a otros comercios (restauración, copisterías, tiendas, etc.).
+
+## Qué demuestra este proyecto
+
+- **Carta online** con precios reales, imágenes optimizadas y fichas de producto.
+- **Carrito de compra** con sesión de usuario (Clerk).
+- **Pedidos por correo** al establecimiento (Web3Forms → Outlook del local).
+- **Impresión / PDF** de la carta completa.
+- **Diseño responsive** (móvil y escritorio), tema oscuro coherente.
+- **Rendimiento**: fuentes self-hosted, imágenes con `astro:Image`, caché en Vercel.
+
+## Stack técnico
+
+| Capa | Tecnología |
+|------|------------|
+| Framework | [Astro 7](https://astro.build) |
+| Estilos | Tailwind CSS 4 |
+| Auth | [Clerk](https://clerk.com) |
+| Email pedidos | [Web3Forms](https://web3forms.com) |
+| Deploy | [Vercel](https://vercel.com) |
+| Repo | [GitHub](https://github.com/Juanmendo13/pizzeria-formula-1) |
+
+## Funcionalidades principales
+
+1. **Home** — hero, historia del local, carta de pizzas y complementos.
+2. **`/producto/[slug]`** — ficha con ingredientes, tamaños y botón añadir al carrito.
+3. **`/carrito`** — cantidades, formulario (recogida/reparto) y envío del pedido.
+4. **`/imprimir-carta`** — versión para imprimir / PDF (pizzas en varias páginas).
+5. **`/sign-in` / `/sign-up`** — login con email o proveedores sociales (Clerk).
+
+## Cómo probarlo en local
+
+```bash
+pnpm install
+pnpm astro dev
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+Abre http://localhost:4321. Necesitas `.env.local` con las claves de Clerk y Web3Forms (ver `.env.example`).
 
-## 🚀 Project Structure
+## Cómo enseñarlo como portfolio
 
-Inside of your Astro project, you'll see the following folders and files:
+1. Abre la **URL en el móvil** y compárala con la web antigua del cliente.
+2. Recorre: carta → producto → carrito → enviar pedido (con sesión iniciada).
+3. Menciona que el **estilo se adapta** al sector; lo reutilizable es la estructura, velocidad y funciones (catálogo, contacto, pedidos, login).
 
-```text
-/
-├── public/
-│   └── favicon.svg
-├── src
-│   ├── assets
-│   │   └── astro.svg
-│   ├── components
-│   │   └── Welcome.astro
-│   ├── layouts
-│   │   └── Layout.astro
-│   └── pages
-│       └── index.astro
-└── package.json
-```
+## Notas
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+- Dominio gratuito de Vercel (`.vercel.app`); no requiere dominio de pago.
+- Clerk puede mostrar avisos de entorno de desarrollo en modo test; válido para demo.
+- Privacidad básica en `/privacidad`.
 
-## 🧞 Commands
+## Comandos
 
-All commands are run from the root of the project, from a terminal:
+| Comando | Acción |
+|---------|--------|
+| `pnpm astro dev` | Servidor local |
+| `pnpm astro build` | Build producción |
+| `vercel --prod` | Publicar (desde tu máquina) |
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `pnpm install`             | Installs dependencies                            |
-| `pnpm dev`             | Starts local dev server at `localhost:4321`      |
-| `pnpm build`           | Build your production site to `./dist/`          |
-| `pnpm preview`         | Preview your build locally, before deploying     |
-| `pnpm astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `pnpm astro -- --help` | Get help using the Astro CLI                     |
+---
 
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+Proyecto desarrollado como demo / portfolio. Pizzería Fórmula 1 — Tocina, Sevilla.

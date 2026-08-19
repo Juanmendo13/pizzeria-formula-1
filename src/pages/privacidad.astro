@@ -1,0 +1,61 @@
+---
+export const prerender = true;
+
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Layout
+  title="Privacidad | Pizzería Fórmula 1"
+  description="Información básica sobre privacidad y servicios de terceros en la web de Pizzería Fórmula 1."
+>
+  <Navbar />
+
+  <main class="bg-black min-h-screen text-white pt-28 pb-20 px-4 sm:px-6 lg:px-8">
+    <article class="max-w-3xl mx-auto prose prose-invert prose-zinc">
+      <h1 class="text-3xl font-black font-mono uppercase tracking-tight mb-6 not-prose">
+        Privacidad
+      </h1>
+
+      <p class="text-zinc-400 leading-relaxed mb-8">
+        Esta web es un proyecto demo / portfolio para Pizzería Fórmula 1 (Tocina, Sevilla).
+        No usamos cookies de publicidad ni analítica propia.
+      </p>
+
+      <section class="space-y-4 text-zinc-300 text-sm leading-relaxed">
+        <h2 class="text-white font-mono font-bold uppercase text-base">Datos que puedes enviar</h2>
+        <p>
+          Si inicias sesión, registras una cuenta o envías un pedido, puedes facilitar nombre,
+          teléfono, email y contenido del carrito. Esos datos se usan solo para gestionar el pedido
+          o la cuenta.
+        </p>
+
+        <h2 class="text-white font-mono font-bold uppercase text-base pt-4">Servicios de terceros</h2>
+        <ul class="list-disc pl-5 space-y-2">
+          <li><strong>Clerk</strong> — inicio de sesión y registro.</li>
+          <li><strong>Web3Forms</strong> — envío de pedidos por correo al local.</li>
+          <li><strong>Vercel</strong> — alojamiento de la web.</li>
+        </ul>
+        <p>
+          Cada proveedor puede usar sus propias cookies o almacenamiento según su política.
+          Consulta sus webs si necesitas más detalle.
+        </p>
+
+        <h2 class="text-white font-mono font-bold uppercase text-base pt-4">Contacto del local</h2>
+        <p>
+          Pizzería Fórmula 1 · Gran Avenida, 62 · 41340 Tocina, Sevilla<br />
+          Teléfono: <a class="text-red-500 hover:text-red-400" href="tel:954740396">954 74 03 96</a>
+        </p>
+      </section>
+
+      <p class="mt-10">
+        <a href="/" class="font-mono text-sm text-red-500 hover:text-red-400 uppercase tracking-wider">
+          ← Volver al inicio
+        </a>
+      </p>
+    </article>
+  </main>
+
+  <Footer />
+</Layout>
