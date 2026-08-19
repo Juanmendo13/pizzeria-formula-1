@@ -239,3 +239,9 @@ export function pedidoTexto(pedido: PedidoResuelto, clienteEmail?: string): stri
     .filter((line) => line !== '')
     .join('\n');
 }
+
+export function pedidoMailto(destino: string, pedido: PedidoResuelto, clienteEmail?: string): string {
+  const subject = `Nuevo pedido · ${pedido.nombre} · ${formatEuro(pedido.total)}`;
+  const body = pedidoTexto(pedido, clienteEmail);
+  return `mailto:${destino}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+}

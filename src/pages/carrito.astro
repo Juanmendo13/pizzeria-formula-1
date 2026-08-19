@@ -114,6 +114,13 @@ const inputClass =
           </label>
 
           <p class="text-sm font-mono hidden" data-order-error></p>
+          <a
+            class="hidden text-sm font-mono text-red-400 hover:text-red-300 underline"
+            data-mailto-link
+            href="#"
+          >
+            Enviar pedido con tu correo
+          </a>
 
           <button
             type="submit"
@@ -148,6 +155,7 @@ const inputClass =
   const form = document.querySelector('[data-order-form]');
   const addressField = document.querySelector('[data-address-field]');
   const errorEl = document.querySelector('[data-order-error]');
+  const mailtoLink = document.querySelector('[data-mailto-link]');
   const submitBtn = document.querySelector('[data-submit-order]');
 
   function escapeHtml(value: string): string {
@@ -158,11 +166,19 @@ const inputClass =
       .replaceAll('"', '&quot;');
   }
 
-  function showError(message: string) {
+  function showError(message: string, mailto?: string) {
     if (!(errorEl instanceof HTMLElement)) return;
     errorEl.textContent = message;
     errorEl.classList.remove('hidden', 'text-green-400');
     errorEl.classList.add('text-red-400');
+    if (mailtoLink instanceof HTMLAnchorElement) {
+      if (mailto) {
+        mailtoLink.href = mailto;
+        mailtoLink.classList.remove('hidden');
+      } else {
+        mailtoLink.classList.add('hidden');
+      }
+    }
   }
 
   function renderCart() {
@@ -276,10 +292,10 @@ const inputClass =
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
-      const result = (await response.json()) as { error?: string };
+      const result = (await response.json()) as { error?: string; mailto?: string };
 
       if (!response.ok) {
-        showError(result.error || 'No se pudo enviar el pedido.');
+        showError(result.error || 'No se pudo enviar el pedido.', result.mailto);
         return;
       }
 
