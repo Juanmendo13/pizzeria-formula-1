@@ -1,0 +1,14 @@
+---
+description: Tras cada cambio de código, commit y push a origin para que se pueda hacer vercel --prod
+alwaysApply: true
+---
+
+# Commit y push siempre
+
+Después de terminar cambios en el código:
+
+1. Haz commit (sin `.env`, `.env.local` ni secretos).
+2. Haz `git push origin HEAD` en el mismo turno. No esperes a que lo pidan.
+3. El usuario publica con `vercel --prod`; no hace falta desplegar desde aquí salvo que lo pida.
+
+Si no hay cambios que commitear, no crees un commit vacío.
