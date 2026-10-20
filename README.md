@@ -78,7 +78,6 @@ cp .env.example .env.local   # Windows: copy .env.example .env.local
 pnpm astro dev
 ```
 
-Abre http://localhost:4321
 
 ### Variables de entorno
 
@@ -97,7 +96,7 @@ Copia `.env.example` a `.env.local` (no se sube a git):
 
 En Clerk Dashboard → **Allowed origins**, incluye:
 
-- `http://localhost:4321`
+
 - `https://pizzeria-formula-1.vercel.app`
 
 ## Despliegue
