@@ -14,7 +14,7 @@ Cómo usarlo:
 
 ## Pendiente
 
-- Localhost: arrancar con `pnpm astro dev` (no `vercel --prod`). En Clerk Dashboard → Allowed origins incluir `http://localhost:4321` y `https://pizzeria-formula-1.vercel.app`.
+- Desarrollo: arrancar con `pnpm astro dev` (no `vercel --prod`). En Clerk Dashboard → Allowed origins incluir la URL de producción y la del servidor de desarrollo que indique Astro.
 - Activar Google y Facebook en Clerk (conexiones sociales + apps OAuth) para que el login social funcione en local y en producción.
 
 

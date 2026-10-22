@@ -78,6 +78,7 @@ cp .env.example .env.local   # Windows: copy .env.example .env.local
 pnpm astro dev
 ```
 
+Astro mostrará en la terminal la URL del servidor de desarrollo.
 
 ### Variables de entorno
 
@@ -94,10 +95,7 @@ Copia `.env.example` a `.env.local` (no se sube a git):
 
 \* Clerk puede arrancar en modo keyless en local; en producción las claves van en Vercel.
 
-En Clerk Dashboard → **Allowed origins**, incluye:
-
-
-- `https://pizzeria-formula-1.vercel.app`
+En Clerk Dashboard → **Allowed origins**, añade la URL de producción (`https://pizzeria-formula-1.vercel.app`) y, si desarrollas en local, la que indique Astro al arrancar.
 
 ## Despliegue
 
